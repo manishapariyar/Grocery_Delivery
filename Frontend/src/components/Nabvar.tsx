@@ -4,8 +4,11 @@ import { assets } from '../assets/assets';
 import { FiSearch } from "react-icons/fi";
 import { IoPersonCircleOutline, IoCartOutline } from "react-icons/io5";
 import { BsShop } from 'react-icons/bs';
+interface Navbar {
+  setShowLogin: React.Dispatch<React.SetStateAction<boolean>>;
+}
 
-const Navbar = () => {
+const Navbar: React.FC<Navbar> = ({ setShowLogin }) => {
   return (
     <div className="w-full sticky top-0 z-50 bg-white shadow-md">
       {/* Mobile Layout */}
@@ -28,7 +31,10 @@ const Navbar = () => {
         {/* Action Icons */}
         <div className="flex items-center gap-2">
           <Link to="/login" className="p-2">
-            <IoPersonCircleOutline className="text-xl" />
+            <button onClick={() => setShowLogin(true)} className="p-2">
+              <IoPersonCircleOutline className="text-xl" />
+            </button>
+
           </Link>
           <Link to="/cart" className="p-2">
             <IoCartOutline className="text-xl" />
@@ -58,9 +64,11 @@ const Navbar = () => {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-4">
-          <Link to="/login" className="hover:bg-green-300 rounded-sm px-4 py-2 flex items-center">
-            <IoPersonCircleOutline className="mr-1 text-xl" /> Login
-          </Link>
+          <button onClick={() => setShowLogin(true)} className="hover:bg-green-300 rounded-sm px-4 py-2 flex items-center">
+
+            <IoPersonCircleOutline className="mr-1 text-xl" />
+            Login
+          </button>
           <Link to="/cart" className="hover:bg-green-300 rounded-sm px-4 py-2 flex items-center">
             <IoCartOutline className="mr-1 text-xl" /> Cart
           </Link>
