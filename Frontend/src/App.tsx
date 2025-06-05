@@ -7,23 +7,26 @@ import Nabvar from "./components/Nabvar"
 import { categories } from "./assets/assets"
 import ImageSlider from "./components/ImageSlider";
 import LoginPopUp from "./pages/LoginPopUp";
+import Footer from "./components/Footer";
+import { useStoreContext } from "./context/StoreContext";
 
 function App() {
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [showLogin, setShowLogin] = useState(false)
+  const { showLogin } = useStoreContext();
 
 
   return (
     <>
-      {showLogin ? <LoginPopUp setShowLogin={setShowLogin} /> : <></>}
+      {showLogin && <LoginPopUp />}
       <div className="">
-        <Nabvar setShowLogin={setShowLogin} />
+        <Nabvar />
         <CategoryMenu
           categories={categories}
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
         />
         <ImageSlider />
+        <Footer />
       </div>
 
 

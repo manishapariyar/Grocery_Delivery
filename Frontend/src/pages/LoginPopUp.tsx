@@ -2,15 +2,14 @@
 import React, { useState } from 'react';
 import { FaWhatsapp, FaFacebookF, FaGoogle } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
+import { useStoreContext } from '../context/StoreContext';
 
-interface PhoneSignupPopupProps {
-  setShowLogin: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
-const LoginPopUp: React.FC<PhoneSignupPopupProps> = ({ setShowLogin }) => {
-  const [phone, setPhone] = useState('');
+
+const LoginPopUp = () => {
+  const { showLogin, setShowLogin } = useStoreContext();
   const [agreed, setAgreed] = useState(false);
-  const [currentState, setCurrentState] = useState("singup");
+  const [currentState, setCurrentState] = useState("signup");
 
   return (
     <div className="fixed inset-0 bg-black/60 bg-opacity-0 z-10 flex justify-center items-center">
