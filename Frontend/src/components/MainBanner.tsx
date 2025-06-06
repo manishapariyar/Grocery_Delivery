@@ -3,7 +3,7 @@ import "react-multi-carousel/lib/styles.css";
 import Carousel from 'react-multi-carousel';
 import { imageSlider } from '../assets/assets';
 
-const ImageSlider = () => {
+const MainBanner = () => {
   const responsive = {
     desktop: {
       breakpoint: { max: 2000, min: 1024 },
@@ -45,4 +45,4 @@ const ImageSlider = () => {
   );
 };
 
-export default ImageSlider;
+export default MainBanner;

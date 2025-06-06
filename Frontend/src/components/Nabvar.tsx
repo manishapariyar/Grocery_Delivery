@@ -10,11 +10,11 @@ import { RxCross2 } from 'react-icons/rx';
 import { BiMenu } from 'react-icons/bi';
 
 const Navbar = () => {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(true);
   const { user, setUser, showLogin, setShowLogin, navigate } = useStoreContext();
 
   const logout = async () => {
-    setUser(null);
+    setUser(false);
     navigate('/');
   };
 
@@ -23,7 +23,7 @@ const Navbar = () => {
       {/* Mobile Layout */}
       <div className="md:hidden flex items-center justify-between px-4 py-2 gap-2">
         {/* Logo */}
-        <NavLink to="/" className="flex-shrink-0">
+        <NavLink to="/" className="flex-shrink-0" onClick={() => setOpen(false)}>
           <img src={assets.logo} alt="logo" className="w-28" />
         </NavLink>
 
@@ -38,18 +38,36 @@ const Navbar = () => {
         </div>
 
         {/* Cart Icon */}
-        <div className="px-2">
-          <NavLink to="/cart" className="hover:bg-green-300 rounded-sm px-4 py-2 flex items-center">
-            <IoCartOutline className="mr-1 text-xl" /> Cart
-          </NavLink>
+        <div onClick={() => navigate("/cart")}
+          className="relative cursor-pointer">
+          <IoCartOutline className="mr-1 text-4xl text-green-500 opacity-80" />
+          <button className='absolute -top-1 -right-1 text-xs bg-red-300 w-[18px] h-[18px] rounded-full text-white'>4</button>
         </div>
+        {user && (
+          <div className='relative group'>
+            <img src={assets.profile_icon} alt="" width={70} />
+            <ul className='hidden group-hover:block absolute top-10 right-0 bg-white shadow border border-gray-200 py-2.5 w-30 rounded-md text-sm z-40  '>
+              <li className='p-1 pl-8   hover:bg-gray-300  cursor-pointer'>
+                <NavLink to="/orders">My Order</NavLink>
+              </li>
+              <li className='p-1 pl-3 hover:bg-gray-300 cursor-pointer'>
+                <button
+                  onClick={logout}
+                  className="hover:bg-gray-300 rounded-sm px-4 flex items-center"
+                >
+                  <LuLogOut className="mr-1 text-xl" />
+                  Logout
+                </button></li>
+            </ul>
+          </div>
+        )}
 
         {/* Menu Icon */}
-        <button onClick={() => setOpen(!open)} className="ml-2">
+        <button onClick={() => setOpen(!open)} className="ml-2 cursor-pointer">
           {open ? (
-            <RxCross2 className="text-xl" />
+            <RxCross2 className="text-2xl" />
           ) : (
-            <BiMenu className="text-2xl" />
+            <BiMenu className="text-3xl" />
           )}
         </button>
 
@@ -60,9 +78,7 @@ const Navbar = () => {
 
           <NavLink to="/" className="hover:border-b border-gray-400 text-l font-bold text-gray-600" onClick={() => setOpen(false)}>Home</NavLink>
           <NavLink to="/product" className="hover:border-b border-gray-400 text-l font-bold text-gray-600" onClick={() => setOpen(false)}>All Product</NavLink>
-          {user && (
-            <NavLink to="/orders" className="hover:border-b border-gray-400" onClick={() => setOpen(false)}>My Order</NavLink>
-          )}
+
           {!user ? (
             <button
               onClick={() => {
@@ -75,15 +91,7 @@ const Navbar = () => {
               <IoPersonCircleOutline className="text-xl  text-green-500" /> Login
             </button>
           ) : (
-            <button
-              onClick={() => {
-                logout();
-                setOpen(false);
-              }}
-              className="bg-green-200 rounded-sm px-4 py-2 flex items-center gap-2"
-            >
-              <LuLogOut className="text-xl text-green-700" /> Logout
-            </button>
+            <></>
           )}
           <NavLink to="/become_seller" className="bg-yellow-100 rounded-sm px-4 py-2 flex items-center gap-2 " onClick={() => setOpen(false)}>
             <BsShop className="text-xl text-amber-400" /> Become a Seller
@@ -118,9 +126,6 @@ const Navbar = () => {
 
         {/* Action Buttons */}
         <div className="flex items-center gap-4">
-          {user && (
-            <NavLink to="/orders" className="hover:border-b border-gray-400">My Order</NavLink>
-          )}
           {!user ? (
             <NavLink to="/login">
               <button
@@ -134,19 +139,32 @@ const Navbar = () => {
               </button>
             </NavLink>
           ) : (
-            <button
-              onClick={logout}
-              className="hover:bg-green-300 rounded-sm px-4 py-2 flex items-center"
-            >
-              <LuLogOut className="mr-1 text-xl" />
-              Logout
-            </button>
+            <div className='relative group'>
+              <img src={assets.profile_icon} alt="" width={40} />
+              <ul className='hidden group-hover:block absolute top-10 right-0 bg-white shadow border border-gray-200 py-2.5 w-30 rounded-md text-sm z-40  '>
+                <li className='p-1 pl-8   hover:bg-gray-300  cursor-pointer'>
+                  <NavLink to="/orders">My Order</NavLink>
+                </li>
+                <li className='p-1 pl-3 hover:bg-gray-300 cursor-pointer'>
+                  <button
+                    onClick={logout}
+                    className="hover:bg-gray-300 rounded-sm px-4 flex items-center"
+                  >
+                    <LuLogOut className="mr-1 text-xl" />
+                    Logout
+                  </button></li>
+
+
+              </ul>
+            </div>
           )}
-          <NavLink to="/cart" className="hover:bg-green-300 rounded-sm px-4 py-2 flex items-center">
-            <IoCartOutline className="mr-1 text-xl" /> Cart
-          </NavLink>
+          <div onClick={() => navigate("/cart")}
+            className="relative cursor-pointer">
+            <IoCartOutline className="mr-1 text-4xl text-green-500 opacity-80" />
+            <button className='absolute -top-1 -right-1 text-xs bg-red-300 w-[18px] h-[18px] rounded-full text-white'>4</button>
+          </div>
           <NavLink to="/become_seller" className="hover:bg-yellow-50 rounded-sm px-4 py-2 flex items-center">
-            <BsShop className="mr-1 text-xl" /> Become a Seller
+            <BsShop className="mr-1 text-xl text-amber-500" /> Become a Seller
           </NavLink>
 
         </div>

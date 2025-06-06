@@ -1,4 +1,5 @@
 import React from "react";
+import { useStoreContext } from "../context/StoreContext";
 
 type CategoryType = {
   text: string;
@@ -18,12 +19,14 @@ const CategoryMenu: React.FC<Props> = ({
   selectedCategory,
   setSelectedCategory,
 }) => {
+
+
+  const { navigate } = useStoreContext();
   return (
     <div className="flex flex-col items-center m-2 shadow-md rounded-xl bg-white w-full max-w-7xl mx-auto justify-center">
       <h1 className="text-sm font-semibold text-neutral-400 mt-4">
         Shop by Category
       </h1>
-
       <div className="flex justify-between overflow-x-auto gap-2 py-2 px-2 w-full scrollbar-hide">
         {categories.map((item, index) => (
           <div
@@ -40,6 +43,11 @@ const CategoryMenu: React.FC<Props> = ({
                 : ""
                 }`}
               style={{ backgroundColor: item.bgColor }}
+              onClick={() => {
+                navigate(`/product/${item.path.toLowerCase()}`)
+                scrollTo(0, 0)
+              }}
+
             >
               <img
                 src={item.image}
