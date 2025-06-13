@@ -127,17 +127,15 @@ const Navbar = () => {
         {/* Action Buttons */}
         <div className="flex items-center gap-4">
           {!user ? (
-            <NavLink to="/login">
-              <button
-                onClick={() => {
-                  setShowLogin(true);
-                }}
-                className="hover:bg-green-300 rounded-sm px-4 py-2 flex items-center"
-              >
-                <IoPersonCircleOutline className="mr-1 text-xl" />
-                Login
-              </button>
-            </NavLink>
+            <button
+              onClick={() => {
+                setShowLogin(true);
+              }}
+              className="hover:bg-green-300 rounded-sm px-4 py-2 flex items-center"
+            >
+              <IoPersonCircleOutline className="mr-1 text-xl" />
+              Login
+            </button>
           ) : (
             <div className='relative group'>
               <img src={assets.profile_icon} alt="" width={40} />

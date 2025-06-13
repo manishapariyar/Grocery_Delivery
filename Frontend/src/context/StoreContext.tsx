@@ -1,8 +1,11 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { dummyProducts } from "../assets/assets";
+import toast from "react-hot-toast";
+import { Product } from "../components/ProductCard";
 
-interface StoreContextType {
+
+export interface StoreContextType {
   navigate: ReturnType<typeof useNavigate>;
   user: boolean;
   setUser: React.Dispatch<React.SetStateAction<boolean>>;
@@ -10,6 +13,13 @@ interface StoreContextType {
   setIsSeller: React.Dispatch<React.SetStateAction<boolean>>;
   showLogin: boolean;
   setShowLogin: React.Dispatch<React.SetStateAction<boolean>>;
+  currency: string;
+  products: Product[];
+  cartItems: Record<string, number>;
+  setCartItems: React.Dispatch<React.SetStateAction<Record<string, number>>>;
+  addToCart: (itemId: string) => void;
+  updateCartItem: (itemId: string, quantity: number) => void;
+  removeFromCart: (itemId: string) => void;
 }
 
 export const StoreContext = createContext<StoreContextType | null>(null);
@@ -20,17 +30,59 @@ export const StoreContextProvider = ({ children }: { children: React.ReactNode }
   const navigate = useNavigate();
   const [user, setUser] = useState(false);
   const [isSeller, setIsSeller] = useState(false);
-  const [product, setProduct] = useState<any[]>([]);
-  const [cartItems, setCartItems] = useState<Record<string, number>>({});
+  const [products, setProducts] = useState<any[]>([]);
+  const [cartItems, setCartItems] = useState<Record<Product['_id'], number>>({});
   const [showLogin, setShowLogin] = useState(true);
+  const [searchQuery, setSearchQuery] = useState({});
 
+
+  // fetch All Products
   const fetchProducts = async () => {
-    setProduct(dummyProducts);
+    setProducts(dummyProducts);
   }
   useEffect(() => {
     fetchProducts();
   }, [])
-  const value = { navigate, user, setUser, setIsSeller, isSeller, showLogin, setShowLogin, product, currency };
+
+
+  // add product to card
+  const addToCart = (itemId: string | number) => {
+    let cartData = structuredClone(cartItems)
+    if (cartData[itemId]) {
+      cartData[itemId] += 1;
+    } else {
+      cartData[itemId] = 1;
+    }
+    setCartItems(cartData);
+    toast.success("Added to Cart")
+  }
+
+  //update card items Quantity
+  const updateCartItem = (itemId: string | number, quantity: number) => {
+    let cartData = structuredClone(cartItems);
+    cartData[itemId] = quantity;
+    setCartItems(cartData);
+    toast.success("Cart Updated")
+  }
+
+  // remove items from card
+
+  const removeFromCart = (itemId: string | number) => {
+    let cartData = structuredClone(cartItems)
+    if (cartData[itemId]) {
+      cartData[itemId] -= 1;
+      if (cartData[itemId] == 0) {
+        delete cartData[itemId];
+      }
+    }
+    setCartItems(cartData);
+    toast.success("Deleted items from Cart")
+  }
+
+  const value = { navigate, user, setUser, setIsSeller, isSeller, showLogin, setShowLogin, products, currency, addToCart, updateCartItem, removeFromCart, cartItems, setCartItems, searchQuery, setSearchQuery };
+
+
+
 
   return (
     <StoreContext.Provider value={value}>
