@@ -44,7 +44,7 @@ const CategoryMenu: React.FC<Props> = ({
                 }`}
               style={{ backgroundColor: item.bgColor }}
               onClick={() => {
-                navigate(`/product/${item.path.toLowerCase()}`)
+                navigate(`/products/${item.path.toLowerCase()}`)
                 scrollTo(0, 0)
               }}
 

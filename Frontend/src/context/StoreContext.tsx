@@ -20,6 +20,8 @@ export interface StoreContextType {
   addToCart: (itemId: string) => void;
   updateCartItem: (itemId: string, quantity: number) => void;
   removeFromCart: (itemId: string) => void;
+  searchQuery: string;
+  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
 }
 
 export const StoreContext = createContext<StoreContextType | null>(null);
@@ -33,7 +35,8 @@ export const StoreContextProvider = ({ children }: { children: React.ReactNode }
   const [products, setProducts] = useState<any[]>([]);
   const [cartItems, setCartItems] = useState<Record<Product['_id'], number>>({});
   const [showLogin, setShowLogin] = useState(true);
-  const [searchQuery, setSearchQuery] = useState({});
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
 
 
   // fetch All Products

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { assets } from '../assets/assets';
 import { FiSearch } from "react-icons/fi";
@@ -11,12 +11,19 @@ import { BiMenu } from 'react-icons/bi';
 
 const Navbar = () => {
   const [open, setOpen] = useState(true);
-  const { user, setUser, showLogin, setShowLogin, navigate } = useStoreContext();
+  const { user, setUser, showLogin, setShowLogin, navigate, setSearchQuery, searchQuery } = useStoreContext();
 
   const logout = async () => {
     setUser(false);
     navigate('/');
   };
+
+  useEffect(() => {
+    if (searchQuery.length > 0) {
+      navigate("/products")
+    }
+
+  }, [setSearchQuery])
 
   return (
     <div className="w-full sticky top-0 z-50 bg-white shadow-md">
@@ -31,6 +38,7 @@ const Navbar = () => {
         <div className="relative w-full">
           <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
           <input
+            onChange={(e) => setSearchQuery(e.target.value)}
             type="text"
             placeholder="Search"
             className="w-full pl-10 pr-4 py-2 rounded-md text-black focus:outline-none bg-green-100"
@@ -77,7 +85,7 @@ const Navbar = () => {
 
 
           <NavLink to="/" className="hover:border-b border-gray-400 text-l font-bold text-gray-600" onClick={() => setOpen(false)}>Home</NavLink>
-          <NavLink to="/product" className="hover:border-b border-gray-400 text-l font-bold text-gray-600" onClick={() => setOpen(false)}>All Product</NavLink>
+          <NavLink to="/products" className="hover:border-b border-gray-400 text-l font-bold text-gray-600" onClick={() => setOpen(false)}>All Product</NavLink>
 
           {!user ? (
             <button
@@ -119,6 +127,7 @@ const Navbar = () => {
           <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
           <input
             type="text"
+            onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search for products"
             className="w-full pl-10 pr-4 py-2 rounded-md text-black focus:outline-none bg-green-100"
           />
