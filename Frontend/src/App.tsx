@@ -8,6 +8,7 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import AllProducts from "./pages/AllProducts";
 import ProductCategory from "./pages/ProductCategory";
+import ProductDetails from "./pages/ProductDetails";
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
             <Route path='/' element={<Home />} />
             <Route path='/products' element={<AllProducts />} />
             <Route path='/products/:category' element={<ProductCategory />} />
+            <Route path='/products/:category/:id' element={<ProductDetails />} />
 
           </Routes>
         </div>

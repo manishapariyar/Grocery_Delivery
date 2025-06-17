@@ -3,6 +3,7 @@ import { assets } from '../assets/assets';
 import { useStoreContext } from '../context/StoreContext';
 
 export interface Product {
+  description: any;
   _id: any;
   id: string;
   name: string;

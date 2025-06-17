@@ -119,7 +119,7 @@ const Navbar = () => {
         {/* Nav Links */}
         <div className="flex justify-center pl-70 gap-8">
           <NavLink to="/" className="hover:border-b border-gray-400">Home</NavLink>
-          <NavLink to="/product" className="hover:border-b border-gray-400">All Product</NavLink>
+          <NavLink to="/products" className="hover:border-b border-gray-400">All Product</NavLink>
         </div>
 
         {/* Search */}

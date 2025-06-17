@@ -74,6 +74,7 @@ import chicken_meat_fist from "./chicken_meat_fish.png";
 import imageSlider1 from "./ImageSlider1.jpg"
 import imageSlider0 from "./imageSlider0.png"
 import imageSlider2 from "./imageSlider2.jpg"
+import chicken from "./chicken.jfif"
 export const assets = {
   logo,
   search_icon,
@@ -154,7 +155,7 @@ export const categories = [
     bgColor: "#edf1fd",
   },
   {
-    text: "Chicken Meat Fish",
+    text: "Chicken_Meat_Fish",
     path: "nonVeg",
     image: chicken_meat_fist,
     bgColor: "#0000",
@@ -559,6 +560,23 @@ export const dummyProducts = [
       "Refreshing lemon-lime flavor",
       "Perfect for refreshing",
       "Best served chilled",
+    ],
+    createdAt: "2025-03-25T07:17:46.018Z",
+    updatedAt: "2025-03-25T07:18:13.103Z",
+    inStock: true,
+  },
+  //chiken
+  {
+    _id: "ek65j56k",
+    name: "1kg",
+    category: "nonVeg",
+    price: 420,
+    offerPrice: 380,
+    image: [chicken],
+    description: [
+      "Tender and juicy texture",
+      "Rich in protein and flavor",
+      "Perfect for grilling, roasting, or curries",
     ],
     createdAt: "2025-03-25T07:17:46.018Z",
     updatedAt: "2025-03-25T07:18:13.103Z",
