@@ -11,7 +11,7 @@ import { BiMenu } from 'react-icons/bi';
 
 const Navbar = () => {
   const [open, setOpen] = useState(true);
-  const { user, setUser, showLogin, setShowLogin, navigate, setSearchQuery, searchQuery } = useStoreContext();
+  const { user, setUser, setShowLogin, navigate, setSearchQuery, searchQuery, getCartCount } = useStoreContext();
 
   const logout = async () => {
     setUser(false);
@@ -49,7 +49,7 @@ const Navbar = () => {
         <div onClick={() => navigate("/cart")}
           className="relative cursor-pointer">
           <IoCartOutline className="mr-1 text-4xl text-green-500 opacity-80" />
-          <button className='absolute -top-1 -right-1 text-xs bg-red-300 w-[18px] h-[18px] rounded-full text-white'>4</button>
+          <button className='absolute -top-1 -right-1 text-xs bg-red-300 w-[18px] h-[18px] rounded-full text-white'>{getCartCount()}</button>
         </div>
         {user && (
           <div className='relative group'>
@@ -168,7 +168,7 @@ const Navbar = () => {
           <div onClick={() => navigate("/cart")}
             className="relative cursor-pointer">
             <IoCartOutline className="mr-1 text-4xl text-green-500 opacity-80" />
-            <button className='absolute -top-1 -right-1 text-xs bg-red-300 w-[18px] h-[18px] rounded-full text-white'>4</button>
+            <button className='absolute -top-1 -right-1 text-xs bg-red-300 w-[18px] h-[18px] rounded-full text-white'>{getCartCount()}</button>
           </div>
           <NavLink to="/become_seller" className="hover:bg-yellow-50 rounded-sm px-4 py-2 flex items-center">
             <BsShop className="mr-1 text-xl text-amber-500" /> Become a Seller

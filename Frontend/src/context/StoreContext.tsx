@@ -20,6 +20,8 @@ export interface StoreContextType {
   addToCart: (itemId: string) => void;
   updateCartItem: (itemId: string, quantity: number) => void;
   removeFromCart: (itemId: string) => void;
+  getCartCount: () => number;
+  getCartAmount: () => number;
   searchQuery: string;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -82,7 +84,29 @@ export const StoreContextProvider = ({ children }: { children: React.ReactNode }
     toast.success("Deleted items from Cart")
   }
 
-  const value = { navigate, user, setUser, setIsSeller, isSeller, showLogin, setShowLogin, products, currency, addToCart, updateCartItem, removeFromCart, cartItems, setCartItems, searchQuery, setSearchQuery };
+  // count cart items
+  const getCartCount = () => {
+    let totalCount = 0;
+    for (const item in cartItems) {
+      totalCount += cartItems[item];
+    }
+    return totalCount;
+  }
+
+  // total amount of cart 
+
+  const getCartAmount = () => {
+    let totalAmount = 0;
+    for (const items in cartItems) {
+      let itemInfo = products.find((product) => product._id === items);
+      if (cartItems[items] > 0) {
+        totalAmount += itemInfo.offerPrice * cartItems[items];
+      }
+    }
+    return Math.floor(totalAmount * 100) / 100;
+  }
+
+  const value = { navigate, user, setUser, setIsSeller, isSeller, showLogin, setShowLogin, products, currency, addToCart, updateCartItem, removeFromCart, cartItems, setCartItems, searchQuery, setSearchQuery, getCartAmount, getCartCount };
 
 
 

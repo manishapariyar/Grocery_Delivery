@@ -3,11 +3,14 @@ import { assets } from '../assets/assets';
 import { useStoreContext } from '../context/StoreContext';
 
 export interface Product {
+  size: string;
   description: any;
   _id: any;
   id: string;
   name: string;
   price: number;
+  weight?: string;
+  quantity?: number;
   offerPrice: number;
   category: string;
   image: string[];
