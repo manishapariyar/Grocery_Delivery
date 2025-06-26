@@ -12,16 +12,19 @@ import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
 import AddAddress from "./pages/AddAddress";
 import MyOrder from "./pages/MyOrder";
+import SellerLogin from "./components/seller/SellerLogin";
+import SellerNavbar from "./components/seller/SellerNavbar";
 
 function App() {
 
-  const { showLogin } = useStoreContext();
+  const { showLogin, isSeller } = useStoreContext();
 
   const isSellerPath = useLocation().pathname.includes("seller");
   return (
     <>
       <div className="">
         {showLogin && <LoginPopUp />}
+        {isSeller && <SellerNavbar />}
         {isSellerPath ? null : <Nabvar />}
         <Toaster />
 
@@ -34,6 +37,7 @@ function App() {
             <Route path='/cart' element={<Cart />} />
             <Route path='/add-address' element={<AddAddress />} />
             <Route path='/orders' element={<MyOrder />} />
+            <Route path='/seller' element={isSeller ? null : <SellerLogin />} />
 
           </Routes>
         </div>

@@ -24,6 +24,7 @@ import main_banner_bg from "./main_banner_bg.png";
 import main_banner_bg_sm from "./main_banner_bg_sm.png";
 import bottom_banner_image from "./bottom_banner_image.png";
 import bottom_banner_image_sm from "./bottom_banner_image_sm.png";
+import sellerLogo from "./sellerLogo.png";
 import add_address_img from "./add_address_img.png";
 import organic_vegitable_image from "./organic_vegitable_image.png";
 import cleaning_Essential_image from "./cleaning_Essential.jpg"
@@ -77,6 +78,7 @@ import imageSlider2 from "./imageSlider2.jpg"
 import chicken from "./chicken.jfif"
 export const assets = {
   logo,
+  sellerLogo,
   search_icon,
   remove_icon,
   arrow_right_icon_colored,

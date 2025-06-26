@@ -11,6 +11,8 @@ export interface StoreContextType {
   setUser: React.Dispatch<React.SetStateAction<boolean>>;
   isSeller: boolean;
   setIsSeller: React.Dispatch<React.SetStateAction<boolean>>;
+  isSellerLogin: boolean;
+  setIsSellerLogin: React.Dispatch<React.SetStateAction<boolean>>;
   showLogin: boolean;
   setShowLogin: React.Dispatch<React.SetStateAction<boolean>>;
   currency: string;
@@ -38,6 +40,7 @@ export const StoreContextProvider = ({ children }: { children: React.ReactNode }
   const [cartItems, setCartItems] = useState<Record<Product['_id'], number>>({});
   const [showLogin, setShowLogin] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [isSellerLogin, setIsSellerLogin] = useState(false);
 
 
 
@@ -106,7 +109,7 @@ export const StoreContextProvider = ({ children }: { children: React.ReactNode }
     return Math.floor(totalAmount * 100) / 100;
   }
 
-  const value = { navigate, user, setUser, setIsSeller, isSeller, showLogin, setShowLogin, products, currency, addToCart, updateCartItem, removeFromCart, cartItems, setCartItems, searchQuery, setSearchQuery, getCartAmount, getCartCount };
+  const value = { navigate, user, setUser, setIsSeller, isSeller, showLogin, setShowLogin, products, currency, addToCart, updateCartItem, removeFromCart, cartItems, setCartItems, searchQuery, setSearchQuery, getCartAmount, getCartCount, isSellerLogin, setIsSellerLogin };
 
 
 
