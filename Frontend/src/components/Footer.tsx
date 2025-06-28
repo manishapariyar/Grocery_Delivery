@@ -1,5 +1,4 @@
-import React from 'react'
-import { assets } from '../assets/assets'
+
 import { FaFacebook, FaInstagram, FaTwitter, FaYoutube } from 'react-icons/fa'
 import { Link } from 'react-router-dom'
 import { BsShop } from 'react-icons/bs'
@@ -46,7 +45,7 @@ const Footer = () => {
       <div className='border-t border-gray-400 mx-6'></div>
 
       <div className="flex flex-col md:flex-row items-center justify-between px-6 py-4 gap-2">
-        <Link to="/become_seller" className="flex items-center gap-2">
+        <Link to="/seller" className="flex items-center gap-2">
           <BsShop className="text-xl text-yellow-300" />
           <span className="text-sm text-gray-100 font-semibold">Become a Seller</span>
         </Link>

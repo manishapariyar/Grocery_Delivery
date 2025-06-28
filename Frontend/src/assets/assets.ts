@@ -2,6 +2,10 @@ import logo from "./logo.png";
 import search_icon from "./search_icon.svg";
 import remove_icon from "./remove_icon.svg";
 import arrow_right_icon_colored from "./arrow_right_icon_colored.svg";
+import { FaPeopleGroup, FaCartArrowDown } from "react-icons/fa6";
+import { GiWallet } from "react-icons/gi";
+import { BsTelephonePlus } from "react-icons/bs";
+import { TbShoppingBagHeart } from "react-icons/tb";
 import star_icon from "./star_icon.svg";
 import star_dull_icon from "./star_dull_icon.svg";
 import cart_icon from "./cart_icon.svg";
@@ -12,6 +16,7 @@ import product_list_icon from "./product_list_icon.svg";
 import order_icon from "./order_icon.svg";
 import upload_area from "./upload_area.png";
 import profile_icon from "./profile_icon.png";
+import instant_food_image from "./instant_food_image.jfif"
 import menu_icon from "./menu_icon.svg";
 import delivery_truck_icon from "./delivery_truck_icon.svg";
 import leaf_icon from "./leaf_icon.svg";
@@ -68,6 +73,7 @@ import butter_croissant_image from "./butter_croissant_image.png";
 import chocolate_cake_image from "./chocolate_cake_image.png";
 import whole_wheat_bread_image from "./whole_wheat_bread_image.png";
 import vanilla_muffins_image from "./vanilla_muffins_image.png";
+
 import quinoa_image from "./quinoa_image.png";
 import brown_rice_image from "./brown_rice_image.png";
 import barley_image from "./barley_image.png";
@@ -76,11 +82,13 @@ import imageSlider1 from "./ImageSlider1.jpg"
 import imageSlider0 from "./imageSlider0.png"
 import imageSlider2 from "./imageSlider2.jpg"
 import chicken from "./chicken.jfif"
+import sellerHeroImage from "./sellerHeroImage.jpg"
 export const assets = {
   logo,
   sellerLogo,
   search_icon,
   remove_icon,
+  sellerHeroImage,
   arrow_right_icon_colored,
   star_icon,
   star_dull_icon,
@@ -105,6 +113,7 @@ export const assets = {
   bottom_banner_image_sm,
   add_address_img,
   box_icon,
+
 };
 
 export const categories = [
@@ -129,8 +138,8 @@ export const categories = [
   {
     text: "Instant Food",
     path: "Instant",
-    image: maggi_image,
-    bgColor: "#fdf6a0",
+    image: instant_food_image,
+    bgColor: "#F0F5DE",
   },
   {
     text: "Dairy Products",
@@ -208,6 +217,29 @@ export const footerLinks = [
       { text: "Facebook", url: "#" },
       { text: "YouTube", url: "#" },
     ],
+  },
+];
+
+export const sellerFeatures = [
+  {
+    icon: FaPeopleGroup,
+    text: "Thousand+ \n Grosha customers",
+  },
+  {
+    icon: GiWallet,
+    text: "7* days secure & \nregular payments",
+  },
+  {
+    icon: FaCartArrowDown,
+    text: "Low cost of \ndoing business",
+  },
+  {
+    icon: BsTelephonePlus,
+    text: "One click Seller\n Support",
+  },
+  {
+    icon: TbShoppingBagHeart,
+    text: "Access to The \nBig Billion Days",
   },
 ];
 

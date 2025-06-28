@@ -14,6 +14,7 @@ import AddAddress from "./pages/AddAddress";
 import MyOrder from "./pages/MyOrder";
 import SellerLogin from "./components/seller/SellerLogin";
 import SellerNavbar from "./components/seller/SellerNavbar";
+import SellerHomePage from "./components/seller/SellerHomePage";
 
 function App() {
 
@@ -37,7 +38,7 @@ function App() {
             <Route path='/cart' element={<Cart />} />
             <Route path='/add-address' element={<AddAddress />} />
             <Route path='/orders' element={<MyOrder />} />
-            <Route path='/seller' element={isSeller ? null : <SellerLogin />} />
+            <Route path='/seller' element={isSeller ? null : <SellerHomePage />} />
 
           </Routes>
         </div>

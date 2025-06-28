@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { assets } from '../assets/assets';
 import { FiSearch } from "react-icons/fi";
@@ -101,7 +101,7 @@ const Navbar = () => {
           ) : (
             <></>
           )}
-          <NavLink to="/become_seller" className="bg-yellow-100 rounded-sm px-4 py-2 flex items-center gap-2 " onClick={() => setOpen(false)}>
+          <NavLink to="/seller" className="bg-yellow-100 rounded-sm px-4 py-2 flex items-center gap-2 " onClick={() => setOpen(false)}>
             <BsShop className="text-xl text-amber-400" /> Become a Seller
           </NavLink>
         </div>
@@ -170,7 +170,7 @@ const Navbar = () => {
             <IoCartOutline className="mr-1 text-4xl text-green-500 opacity-80" />
             <button className='absolute -top-1 -right-1 text-xs bg-red-300 w-[18px] h-[18px] rounded-full text-white'>{getCartCount()}</button>
           </div>
-          <NavLink to="/become_seller" className="hover:bg-yellow-50 rounded-sm px-4 py-2 flex items-center">
+          <NavLink to="/seller" className="hover:bg-yellow-50 rounded-sm px-4 py-2 flex items-center">
             <BsShop className="mr-1 text-xl text-amber-500" /> Become a Seller
           </NavLink>
 
