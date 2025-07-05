@@ -4,8 +4,9 @@ import { useStoreContext } from '../../context/StoreContext';
 import { useState } from 'react';
 
 const SellerNavbar = () => {
-  const { isSellerLogin, setIsSellerLogin, navigate } = useStoreContext();
+  const { isSellerLogin, setIsSellerLogin } = useStoreContext();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
 
   const options = [
     "Create Account",
@@ -61,7 +62,7 @@ const SellerNavbar = () => {
         <button
           onClick={() => {
             setIsSellerLogin(false);
-            navigate("/seller");
+
           }}
           className="text-gray-700 hover:text-red-600 font-medium transition"
         >

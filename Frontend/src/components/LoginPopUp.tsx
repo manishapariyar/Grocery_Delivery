@@ -1,11 +1,11 @@
 // src/components/PhoneSignupPopup.tsx
-import React, { useState } from 'react';
-import { FaWhatsapp, FaFacebookF, FaGoogle } from 'react-icons/fa';
+import { useState } from 'react';
+import { FaFacebookF, FaGoogle } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
 import { useStoreContext } from '../context/StoreContext';
 
 const LoginPopUp = () => {
-  const { setShowLogin, setUser } = useStoreContext();
+  const { setShowLogin, } = useStoreContext();
   const [agreed, setAgreed] = useState(false);
   const [currentState, setCurrentState] = useState<'login' | 'signup'>("signup");
 

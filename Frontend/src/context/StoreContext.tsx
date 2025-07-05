@@ -35,7 +35,7 @@ export const StoreContextProvider = ({ children }: { children: React.ReactNode }
 
   const navigate = useNavigate();
   const [user, setUser] = useState(true);
-  const [isSeller, setIsSeller] = useState(false);
+  const [isSeller, setIsSeller] = useState(true);
   const [products, setProducts] = useState<any[]>([]);
   const [cartItems, setCartItems] = useState<Record<Product['_id'], number>>({});
   const [showLogin, setShowLogin] = useState(false);
