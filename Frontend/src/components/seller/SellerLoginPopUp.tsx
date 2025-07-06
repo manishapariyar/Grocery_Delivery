@@ -14,7 +14,7 @@ const SellerLoginPopUp = () => {
   } = useStoreContext();
 
   // internal UI state
-  const [currentState, setCurrentState] = useState<'login' | 'signup'>('login');
+  const [currentState, setCurrentState] = useState<'login' | 'signup'>('signup');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [agreed, setAgreed] = useState(false); // terms checkbox

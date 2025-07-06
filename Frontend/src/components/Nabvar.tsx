@@ -101,7 +101,7 @@ const Navbar = () => {
           ) : (
             <></>
           )}
-          <NavLink to="/seller" className="bg-yellow-100 rounded-sm px-4 py-2 flex items-center gap-2 " onClick={() => setOpen(false)}>
+          <NavLink to="/seller/dashboard" className="bg-yellow-100 rounded-sm px-4 py-2 flex items-center gap-2 " onClick={() => setOpen(false)}>
             <BsShop className="text-xl text-amber-400" /> Become a Seller
           </NavLink>
         </div>

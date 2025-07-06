@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { useStoreContext } from '../../context/StoreContext';
 import { assets } from '../../assets/assets';
 import { Link, NavLink, Outlet } from 'react-router-dom';
@@ -27,7 +27,7 @@ const SellerLayout = () => {
   return (
     <>
       <div className='flex items-center justify-between px-4 md:px-8 border-b border-gray-300 py-3 bg-white'>
-        <Link to={'/'}>
+        <Link to={'/seller/dashboard'}>
           <img src={assets.sellerLogo} alt="logo" className='cursor-pointer w-28 ' />
         </Link>
         <div className='flex items-center gap-5 text-gray-500'>

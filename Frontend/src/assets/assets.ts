@@ -83,6 +83,9 @@ import imageSlider0 from "./imageSlider0.png"
 import imageSlider2 from "./imageSlider2.jpg"
 import chicken from "./chicken.jfif"
 import sellerHeroImage from "./sellerHeroImage.jpg"
+import Success1 from "./Success1.jpg"
+import Success3 from "./Success3.jpg"
+import Success2 from "./Success2.jfif"
 export const assets = {
   logo,
   sellerLogo,
@@ -924,3 +927,31 @@ export const dummyOrders = [
     updatedAt: "2025-03-25T07:17:13.068Z",
   },
 ];
+
+export const testimonials = [
+  {
+    id: 1,
+    name: "Shayam Kumar Singh",
+    address: "Palpa",
+    img: Success2,
+    text: "After joining Grosha, I turned my small grocery shop into a growing online business. I started getting regular orders from nearby areas. The platform is simple and seller-friendly. Groshaaa truly changed the way I do business.",
+    stars: 5,
+  },
+  {
+    id: 2,
+    name: "Sanjay Kumar",
+    address: "Butwal",
+    img: Success1,
+    text: "Grosha helped me reach more customers without any technical skills. Managing my store online is now smooth and efficient. Orders increased every month since I joined. It’s the perfect partner for grocery sellers like me.",
+    stars: 5,
+  },
+  {
+    id: 3,
+    name: "Sita Devi Battarai",
+    address: "Kathmandu",
+    img: Success3,
+    text: "Being a seller on Grosha gave me confidence and independence. I started with just a few products, now I serve many homes. The support team guided me throughout. It’s the best decision I’ve made for my business, and I just focus on fulfilling quality orders",
+    stars: 5,
+  },
+];
+

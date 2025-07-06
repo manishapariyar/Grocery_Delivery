@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { useStoreContext } from "../../context/StoreContext";
 import { assets, dummyOrders } from "../../assets/assets";
 import { FiPackage } from "react-icons/fi"; // simple outline icon
@@ -7,6 +7,7 @@ type Order = {
   createdAt: string | number | Date;
   items: { product: { name: string }; quantity: number }[];
   address: {
+    phone: number;
     firstName: string;
     lastName: string;
     street: string;
@@ -88,6 +89,9 @@ const Orders = () => {
                   {order.address.state} {order.address.zipcode},{" "}
                   {order.address.country}
                 </p>
+                <p className="leading-snug">
+                  {order.address.phone}
+                </p>
               </div>
 
               {/* Right‑side meta */}
@@ -98,14 +102,14 @@ const Orders = () => {
                 </p>
 
                 <p className="text-sm text-gray-600">
-                  {order.paymentType} •{" "}
-                  {new Date(order.createdAt).toLocaleDateString()}
+                  <p>Method <span className="font-bold m-1">:</span> {order.paymentType}•{" "}</p>
+                  <p>Date<span className="font-bold m-1">:</span> {new Date(order.createdAt).toLocaleDateString()}</p>
                 </p>
 
                 <span
                   className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${paidClass}`}
                 >
-                  {order.isPaid ? "Paid" : "Pending"}
+                  <p>Payment<span className="font-bold m-1">:</span> {order.isPaid ? "Paid" : "Pending"}</p>
                 </span>
               </div>
             </article>

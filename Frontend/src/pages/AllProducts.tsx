@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useStoreContext } from "../context/StoreContext"
 import ProductCard, { Product } from '../components/ProductCard';
 const AllProducts = () => {
-  const { products, searchQuery, setSearchQuery } = useStoreContext()
+  const { products, searchQuery } = useStoreContext()
   const [filterProduct, setFilterProduct] = useState<Product[]>([]);
 
   useEffect(() => {
