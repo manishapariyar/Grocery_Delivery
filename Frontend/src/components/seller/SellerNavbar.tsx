@@ -1,11 +1,11 @@
-import { IoIosArrowDown } from 'react-icons/io';
+
 import { assets } from '../../assets/assets';
 import { useStoreContext } from '../../context/StoreContext';
-import { useState } from 'react';
+
 
 const SellerNavbar = () => {
-  const { isSellerLogin, setIsSellerLogin } = useStoreContext();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const { setIsSellerLogin } = useStoreContext();
+
 
 
 
