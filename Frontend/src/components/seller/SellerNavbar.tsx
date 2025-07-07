@@ -21,24 +21,14 @@ const SellerNavbar = () => {
       </div>
 
       {/* Right: Auth Buttons */}
-      {isSellerLogin ? (
-        <button
-          onClick={() => {
-            setIsSellerLogin(false);
 
-          }}
-          className="text-gray-700 hover:text-red-600 font-medium transition"
-        >
-          Logout
-        </button>
-      ) : (
-        <button
-          onClick={() => setIsSellerLogin(true)}
-          className="text-gray-700 hover:text-green-700 font-medium transition"
-        >
-          Login
-        </button>
-      )}
+      <button
+        onClick={() => setIsSellerLogin(true)}
+        className="text-gray-700 hover:text-green-700 font-medium transition"
+      >
+        Login
+      </button>
+
     </div>
   );
 };

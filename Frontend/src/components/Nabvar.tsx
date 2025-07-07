@@ -170,7 +170,7 @@ const Navbar = () => {
             <IoCartOutline className="mr-1 text-4xl text-green-500 opacity-80" />
             <button className='absolute -top-1 -right-1 text-xs bg-red-300 w-[18px] h-[18px] rounded-full text-white'>{getCartCount()}</button>
           </div>
-          <NavLink to="/seller" className="hover:bg-yellow-50 rounded-sm px-4 py-2 flex items-center">
+          <NavLink to="/seller/dashboard" className="hover:bg-yellow-50 rounded-sm px-4 py-2 flex items-center">
             <BsShop className="mr-1 text-xl text-amber-500" /> Become a Seller
           </NavLink>
 
