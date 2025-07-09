@@ -9,7 +9,12 @@ router.get('/test', (req, res) => {
 }
 );
 
-router.get('/google-login', googleAuth);
+router.get('/api/auth/google', googleAuth);
 router.get('/google/callback', googleCallback)
 
-export default router;
+
+
+
+
+
+export default router; 

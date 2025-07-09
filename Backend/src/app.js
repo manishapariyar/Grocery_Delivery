@@ -22,12 +22,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static('uploads'));
 app.use(cookieParser());
-
-app.get('/', (req, res) => {
-  res.send('E-commerce Backend Server is running');
-}
-);
 configurePassport();
+
+
+
+
 app.use(session({
   secret: process.env.SESSION_SECRET ||
     'default_secret_key',
@@ -38,6 +37,9 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.get('/', (req, res) => {
+  res.status(200).send({ message: "Welcome to the E-commerce API" });
+})
 
 app.use('/api/auth', authRouter)
 

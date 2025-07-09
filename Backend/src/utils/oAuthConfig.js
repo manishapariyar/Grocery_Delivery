@@ -10,20 +10,33 @@ const configurePassport = () => {
   passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL: '/api/auth/google/callback',
+    callbackURL: `${process.env.BASE_URL}/api/auth/google/callback`,
   },
     async (accessToken, refreshToken, profile, done) => {
       try {
         // Check if user already exists
-        let user =
-          await User.findOne({ 'google.providerId': profile.id });
-        await User.findOne({ email: profile.emails[0]?.value });
+        let user = await User.findOne({
+          $or: [
+            { 'google.providerId': profile.id },
+            { email: profile.emails[0]?.value },
+          ],
+        });
 
-        if (!user) {
+        if (user) {
+          if (!user.google.providerId) {
+            user.google = {
+              providerId: profile.id,
+              accessToken,
+              refreshToken,
+            };
+            await user.save();
+          }
+          return done(null, user);
+        } else {
           // Create a new user if not found
           user = new User({
             name: profile.displayName,
-            email: profile.emails[0].value,
+            email: profile.emails[0]?.value,
             google: {
               providerId: profile.id,
               accessToken,
@@ -31,8 +44,9 @@ const configurePassport = () => {
             },
           });
           await user.save();
+          return done(null, user);
         }
-        return done(null, user);
+
       } catch (error) {
         console.error('Google OAuth error:', error);
         return done(error, null);

@@ -24,7 +24,6 @@ const userSchema = new mongoose.Schema({
     required: function () {
       return !(
         this.google?.providerId ||
-        this.github?.providerId ||
         this.facebook?.providerId
       );
     },
@@ -34,11 +33,10 @@ const userSchema = new mongoose.Schema({
     default: {},
   },
   google: oauthSchema,
-  github: oauthSchema,
   facebook: oauthSchema,
 }, { minimize: false, timestamps: true }
 )
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.models.user || mongoose.model("User", userSchema);
 
 export default User;
