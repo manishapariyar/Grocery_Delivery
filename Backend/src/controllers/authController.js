@@ -1,14 +1,22 @@
-import User from "../models/User";
+import User from "../models/User.js";
 import validator from "validator";
 import passport from "passport";
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+
 
 
 const generateAuthToken = (id) => {
-  const token = jwt.sign({ id }, process.env.JWT_SECRET, {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
     expiresIn: '1h',
   });
-  return token;
-}
+};
+const cookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+  maxAge: 24 * 60 * 60 * 1000, // 1 day
+};
 export const googleAuth = passport.authenticate('google', {
   scope: ['profile', 'email'],
   session: false,
@@ -22,7 +30,9 @@ export const googleCallback = async (req, res) => {
       return res.status(400).json({ message: 'Google authentication failed', error: err || info });
     }
     const token = user.generateAuthToken();
-    res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'None' });
+
+    res.cookie('token', token, cookieOptions);
+
     return res.status(200).json({ message: 'Google authentication successful', user });
   })(req, res);
 }
@@ -31,8 +41,12 @@ export const googleCallback = async (req, res) => {
 //register user
 export const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    return res.status(400).json({ success: false, message: "Please provide all required fields" });
+  }
+
   try {
-    const exits = new User.findOne({ email });
+    const exits = await User.findOne({ email });
     if (exits) {
       return res
         .status(400)
@@ -58,23 +72,31 @@ export const registerUser = async (req, res) => {
       email,
       password: hashedPassword,
     });
+
+
+    const token = generateAuthToken(user._id);
     await user.save();
-    const token = user.generateAuthToken(user._id);
+    res.cookie('token', token, cookieOptions);
     res.status(201).json({ success: true, message: 'User registered successfully', token });
   } catch (error) {
-    res.status(400).json({ message: 'Error registering user', error });
+    console.error('Registration error:', error);
+    res.status(400).json({ message: 'Error registering user', error: error?.message || error });
   }
+
 
 }
 
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
+  if (!email || !password) {
+    return res.status(400).json({ success: false, message: "Please provide all required fields" });
+  }
   try {
     const user
       = await User
         .findOne({ email })
-        .select('+password');
+
     if (!user) {
       return res.status(400).json({ success: false, message: 'Invalid email or password' });
     }
@@ -82,7 +104,8 @@ export const loginUser = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ success: false, message: 'Invalid credentials' });
     }
-    const token = user.generateAuthToken(user._id);
+    const token = generateAuthToken(user._id);
+    res.cookie('token', token, cookieOptions);
     res.status(200).json({ success: true, message: 'Login successful', token });
   }
   catch (error) {
@@ -93,3 +116,39 @@ export const loginUser = async (req, res) => {
     });
   }
 }
+
+//logout user
+export const logoutUser = async (req, res) => {
+  try {
+
+    res.clearCookie('token', cookieOptions);
+    res.status(200).json({ success: true, message: 'User logged out successfully' });
+  } catch (error) {
+    console.error('Logout error:', error);
+    res.status(500).json({ success: false, message: 'Error logging out user', error: error?.message || error });
+  }
+
+};
+
+
+//user profile
+export const userProfile = async (req, res) => {
+  try {
+    const userId = req.user?.id || req.body?.userId;
+
+    if (!userId) {
+      return res.status(400).json({ success: false, message: 'User ID not provided' });
+    }
+
+    const user = await User.findById(userId).select('-password');
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+    res.status(500).json({ success: false, message: 'Error fetching user profile', error: error?.message || error });
+  }
+};
