@@ -5,7 +5,11 @@ import authRouter from './routes/authRouter.js';
 import session from 'express-session';
 import passport from 'passport';
 import configurePassport from './utils/oAuthConfig.js';
-
+import sellerRouter from './routes/sellerRouter.js';
+import productRouter from './routes/productRouter.js';
+import cartRouter from './routes/cartRouter.js';
+import addressRouter from './routes/addressRouter.js';
+import orderRouter from './routes/orderRouter.js';
 
 const app = express();
 
@@ -41,6 +45,10 @@ app.get('/', (req, res) => {
   res.status(200).send({ message: "Welcome to the E-commerce API" });
 })
 
-app.use('/api/auth', authRouter)
-
+app.use('/api/auth/user', authRouter)
+app.use('/api/auth/seller', sellerRouter);
+app.use('/api/product', productRouter);
+app.use('/api/cart', cartRouter);
+app.use('/api/address', addressRouter);
+app.use('/api/order', orderRouter);
 export default app;
