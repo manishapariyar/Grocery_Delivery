@@ -4,7 +4,7 @@ import LoginPopUp from "./components/LoginPopUp";
 import Footer from "./components/Footer";
 import { useStoreContext } from "./context/StoreContext";
 import Home from "./pages/Home";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import AllProducts from "./pages/AllProducts";
 import ProductCategory from "./pages/ProductCategory";
@@ -14,7 +14,7 @@ import AddAddress from "./pages/AddAddress";
 import MyOrder from "./pages/MyOrder";
 import SellerLoginPopUp from "./components/seller/SellerLoginPopUp";
 import SellerHomePage from "./components/seller/SellerHomePage";
-import SellerLayout from "./pages/seller/SellerLayout";
+import SellerLayout from "./components/seller/SellerLayout";
 import AddProduct from "./pages/seller/AddProduct";
 import Orders from "./pages/seller/Orders";
 import ProductList from "./pages/seller/ProductList";
@@ -43,10 +43,12 @@ function App() {
             <Route path='/add-address' element={<AddAddress />} />
             <Route path='/orders' element={<MyOrder />} />
 
-            <Route path='/seller/dashboard' element={isSeller ? <SellerLayout /> : <SellerHomePage />} >
-              <Route path='add-product' element={isSeller ? <AddProduct /> : null} />
-              <Route path='order-list' element={<Orders />} />
-              <Route path='product-list' element={<ProductList />} />
+            <Route path="/seller" element={<SellerHomePage />} />
+
+            <Route path="/seller/dashboard" element={isSeller ? <SellerLayout /> : <Navigate to="/seller" />} >
+              <Route path="add-product" element={<AddProduct />} />
+              <Route path="order-list" element={<Orders />} />
+              <Route path="product-list" element={<ProductList />} />
             </Route>
 
           </Routes>

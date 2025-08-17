@@ -9,7 +9,7 @@ import { BsBagCheck } from 'react-icons/bs';
 
 const SellerLayout = () => {
 
-  const { setIsSeller } = useStoreContext();
+  const { setIsSeller, navigate } = useStoreContext();
 
 
   const sidebarLinks = [
@@ -21,7 +21,19 @@ const SellerLayout = () => {
   ];
 
   const logout = async () => {
-    setIsSeller(false);
+    const response = await fetch('/api/seller/logout', {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    if (response.ok) {
+      setIsSeller(false);
+      localStorage.removeItem('sellerInfo');
+      navigate('/seller');
+    } else {
+      console.error('Logout failed');
+    }
   }
 
   return (

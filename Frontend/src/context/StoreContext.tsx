@@ -3,7 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { dummyProducts } from "../assets/assets";
 import toast from "react-hot-toast";
 import { Product } from "../components/ProductCard";
+import axios from "axios";
 
+
+axios.defaults.withCredentials = true; // Enable sending cookies with requests
+// Set the base URL for axios requests
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 
 export interface StoreContextType {
   navigate: ReturnType<typeof useNavigate>;
@@ -109,7 +114,7 @@ export const StoreContextProvider = ({ children }: { children: React.ReactNode }
     return Math.floor(totalAmount * 100) / 100;
   }
 
-  const value = { navigate, user, setUser, setIsSeller, isSeller, showLogin, setShowLogin, products, currency, addToCart, updateCartItem, removeFromCart, cartItems, setCartItems, searchQuery, setSearchQuery, getCartAmount, getCartCount, isSellerLogin, setIsSellerLogin };
+  const value = { navigate, user, setUser, setIsSeller, isSeller, showLogin, setShowLogin, products, currency, addToCart, updateCartItem, removeFromCart, cartItems, setCartItems, searchQuery, setSearchQuery, getCartAmount, getCartCount, isSellerLogin, setIsSellerLogin, axios };
 
 
 
