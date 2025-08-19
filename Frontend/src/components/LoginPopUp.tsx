@@ -1,29 +1,64 @@
-// src/components/PhoneSignupPopup.tsx
 import { useState } from 'react';
 import { FaFacebookF, FaGoogle } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
 import { useStoreContext } from '../context/StoreContext';
 
 const LoginPopUp = () => {
-  const { setShowLogin, } = useStoreContext();
+  const { setShowLogin, axios, setUser } = useStoreContext();
   const [agreed, setAgreed] = useState(false);
   const [currentState, setCurrentState] = useState<'login' | 'signup'>("signup");
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: ''
+  });
 
-  const onSumbitHandler = async (event: { preventDefault: () => void; }) => {
-    event?.preventDefault()
-  }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const onSubmitHandler = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    try {
+      if (currentState === 'signup') {
+        if (!agreed) {
+          alert('Please agree to the Terms of Use and Privacy Policy');
+          return;
+        }
+        const response = await axios.post('/api/auth/user/signup', formData);
+        console.log('Signup success:', response.data);
+        // maybe store token / set user context here
+        setUser(true);
+        setShowLogin(false);
+      } else {
+        const response = await axios.post('/api/auth/user/login', {
+          email: formData.email,
+          password: formData.password
+        });
+        console.log('Login success:', response.data);
+
+        setShowLogin(false);
+        setUser(true);
+      }
+    } catch (error: any) {
+      console.error('Error:', error.response?.data || error.message);
+
+    }
+  };
 
   return (
     <div
       onClick={() => setShowLogin(false)}
-      className="fixed inset-0 bg-black/60 z-10  mt-2 flex justify-center items-center"
+      className="fixed inset-0 bg-black/60 z-10 mt-2 flex justify-center items-center"
     >
-      <div onSubmit={onSumbitHandler}
+      <form
+        onSubmit={onSubmitHandler}
         onClick={(e) => e.stopPropagation()} // prevent modal close when clicking inside
         className="bg-white w-[90%] max-w-[400px] rounded-lg p-6 relative shadow-md animate-fadeIn"
       >
         {/* Close Button */}
-        <button className="absolute top-4 right-4 text-gray-500" onClick={() => setShowLogin(false)}>
+        <button className="absolute top-4 right-4 text-gray-500" onClick={() => setShowLogin(false)} type="button">
           <IoClose size={20} />
         </button>
 
@@ -38,6 +73,8 @@ const LoginPopUp = () => {
             type="text"
             placeholder="Enter your name"
             name="name"
+            value={formData.name}
+            onChange={handleChange}
             required
             className="w-full px-4 py-3 text-sm outline-none border border-gray-300 rounded-md mb-2"
           />
@@ -48,6 +85,8 @@ const LoginPopUp = () => {
           type="email"
           placeholder="Your email"
           name="email"
+          value={formData.email}
+          onChange={handleChange}
           required
           className="w-full px-4 py-3 text-sm outline-none border border-gray-300 rounded-md mb-2"
         />
@@ -55,6 +94,8 @@ const LoginPopUp = () => {
           type="password"
           placeholder="Password"
           name="password"
+          value={formData.password}
+          onChange={handleChange}
           required
           className="w-full px-4 py-3 text-sm outline-none border border-gray-300 rounded-md mb-4"
         />
@@ -109,28 +150,28 @@ const LoginPopUp = () => {
           )}
         </p>
 
-        {/* Signup: Social Options */}
+        {/* Social Options */}
+        <div className="flex items-center gap-2 my-4">
+          <hr className="flex-1 border-gray-300" />
+          <span className="text-xs text-gray-500">
+            {currentState === "signup" ? "Or, sign up with" : "Or, login with"}
+          </span>
+          <hr className="flex-1 border-gray-300" />
+        </div>
+        <div className="flex justify-center gap-6">
+          <button type="button" className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 flex items-center gap-1">
+            <FaGoogle /> Google
+          </button>
+          <button type="button" className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 flex items-center gap-1">
+            <FaFacebookF /> Facebook
+          </button>
+        </div>
 
-        <>
-          <div className="flex items-center gap-2 my-4">
-            <hr className="flex-1 border-gray-300" />
-            {currentState === "signup" ? <span className="text-xs text-gray-500">Or, sign up with</span> : <span className="text-xs text-gray-500">Or, login up with</span>}
-
-            <hr className="flex-1 border-gray-300" />
-          </div>
-          <div className="flex justify-center gap-6">
-            <button className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 flex items-center gap-1">
-              <FaGoogle /> Google
-            </button>
-            <button className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 flex items-center gap-1">
-              <FaFacebookF /> Facebook
-            </button>
-          </div>
-        </>
-
-      </div>
+      </form>
     </div>
   );
 };
 
 export default LoginPopUp;
+
+

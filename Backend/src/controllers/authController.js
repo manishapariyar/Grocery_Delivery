@@ -13,7 +13,8 @@ const generateAuthToken = (id) => {
 };
 const cookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
+  secure: false,
+  // secure: process.env.NODE_ENV === 'production',
   sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
   maxAge: 24 * 60 * 60 * 1000, // 1 day
 };
@@ -41,6 +42,7 @@ export const googleCallback = async (req, res) => {
 //register user
 export const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
+  console.log('Registering user:', { name, email });
   if (!name || !email || !password) {
     return res.status(400).json({ success: false, message: "Please provide all required fields" });
   }
@@ -77,7 +79,7 @@ export const registerUser = async (req, res) => {
     const token = generateAuthToken(user._id);
     await user.save();
     res.cookie('token', token, cookieOptions);
-    res.status(201).json({ success: true, message: 'User registered successfully', token });
+    res.status(201).json({ success: true, message: 'User registered successfully', token, });
   } catch (error) {
     console.error('Registration error:', error);
     res.status(400).json({ message: 'Error registering user', error: error?.message || error });
@@ -89,6 +91,7 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
+  console.log('Logging in user:', { email });
   if (!email || !password) {
     return res.status(400).json({ success: false, message: "Please provide all required fields" });
   }

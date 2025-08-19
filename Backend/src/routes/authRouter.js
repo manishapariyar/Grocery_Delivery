@@ -9,7 +9,7 @@ router.get('/test', (req, res) => {
   res.status(200).json({ message: "Auth Router is working" });
 }
 );
-router.post('/register', registerUser);
+router.post('/signup', registerUser);
 router.post('/login', loginUser)
 router.get('/logout', authMiddleware, logoutUser)
 router.get('/is-auth', authMiddleware, userProfile)
