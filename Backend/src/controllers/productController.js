@@ -1,12 +1,12 @@
 import { v2 as cloudinary } from 'cloudinary';
 import Product from '../models/Product.js';
 
-//Add product :/api/product/add
+// Add product : /api/product/add
 export const addProduct = async (req, res) => {
   try {
-    // Assuming you have a Product model imported
     let productData = JSON.parse(req.body.productData);
-    const images = req.files
+    const images = req.files;
+
     let imagesArray = await Promise.all(
       images.map(async (image) => {
         let result = await cloudinary.uploader.upload(image.path, {
@@ -16,72 +16,66 @@ export const addProduct = async (req, res) => {
         return result.secure_url;
       })
     );
-
-    await Product.create({
+    const product = await Product.create({
       ...productData,
       images: imagesArray,
+      seller: req.user._id, // from SellerCredentials
     });
-    res.status(201).json({ message: 'Product added successfully', Product: productData });
+    res.status(201).json({ success: true, message: 'Product added successfully', product });
   } catch (error) {
-    res.status(500).json({ message: 'Error adding product', error: error.message });
+    console.error("Error while adding product:", error);
+    res.status(500).json({
+      success: false,
+      message: 'Error adding product',
+      error: error.message
+    });
   }
+};
 
-}
-
-
-// get product list : /api/product/list
+// Get product list : /api/product/list
 export const productList = async (req, res) => {
   try {
     const products = await Product.find({});
-    res.status(200).json({ message: 'Product list fetched successfully', products });
+    res.status(200).json({ success: true, message: 'Product list fetched successfully', products });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error fetching product list', error: error.message });
   }
-  catch (error) {
-    res.status(500).json({ message: 'Error fetching product list', error: error.message });
-  }
-}
+};
 
-
-//get product by id : /api/product/:id
+// Get product by ID : /api/product/:id
 export const getProduct = async (req, res) => {
   try {
+    const product = await Product.findById(req.params.id);
+    if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
 
-    const product = await Product.findById(req.body.id);
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-    res.status(200).json({ message: 'Product fetched successfully', product });
+    res.status(200).json({ success: true, message: 'Product fetched successfully', product });
   } catch (error) {
-    res.status(500).json({ message: 'Error fetching product', error: error.message });
+    res.status(500).json({ success: false, message: 'Error fetching product', error: error.message });
   }
-}
+};
 
-// delete product by id : /api/product/delete/:id
+// Delete product by ID : /api/product/delete/:id
 export const deleteProduct = async (req, res) => {
   try {
-    const { id } = req.body;
-    const product = await Product.findByIdAndDelete(id);
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-    res.status(200).json({ message: 'Product deleted successfully' });
-  } catch (error) {
-    res.status(500).json({ message: 'Error deleting product', error: error.message });
-  }
-}
+    const product = await Product.findByIdAndDelete(req.params.id);
+    if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
 
-//change product inStock : /api/product/changeStock/:id
+    res.status(200).json({ success: true, message: 'Product deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Error deleting product', error: error.message });
+  }
+};
+
+// Change product stock : /api/product/changeStock/:id
 export const changeProductStock = async (req, res) => {
   try {
+    const { stock } = req.body;
 
-    const { id, stock } = req.body;
+    const product = await Product.findByIdAndUpdate(req.params.id, { stock }, { new: true });
+    if (!product) return res.status(404).json({ success: false, message: 'Product not found' });
 
-    const product = await Product.findByIdAndUpdate(id, { stock }, { new: true });
-    if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
-    }
-    res.status(200).json({ message: 'Product stock updated successfully', product });
+    res.status(200).json({ success: true, message: 'Product stock updated successfully', product });
   } catch (error) {
-    res.status(500).json({ message: 'Error updating product stock', error: error.message });
+    res.status(500).json({ success: false, message: 'Error updating product stock', error: error.message });
   }
-
-}
+};

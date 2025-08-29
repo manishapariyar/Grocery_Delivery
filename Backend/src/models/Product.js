@@ -7,7 +7,7 @@ const productSchema = new mongoose.Schema({
     required: true,
   },
   description: {
-    type: Array,
+    type: String,
     required: true,
   },
   price: {
@@ -25,12 +25,14 @@ const productSchema = new mongoose.Schema({
   stock: {
     type: Boolean,
     required: true,
+    default: true,
 
   },
   images: {
     type: Array,
     required: true,
   },
+  seller: { type: mongoose.Schema.Types.ObjectId, ref: 'Seller', required: true },
   // ratings: {
   //   type: [Number],
   //   default: [],

@@ -1,22 +1,60 @@
 import { useState } from "react";
 import { assets, categories } from "../../assets/assets";
+import { useStoreContext } from "../../context/StoreContext";
+import toast from "react-hot-toast";
 
 
 const AddProduct = () => {
-  const [file, setFile] = useState<(File | undefined)[]>([]);
+  const [file, setFile] = useState<File[]>([]);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
   const [price, setPrice] = useState(0);
   const [offerPrice, setOfferPrice] = useState(0);
 
+  const { axios } = useStoreContext();
 
 
 
-
-  const onSubmitHandler = (e: { preventDefault: () => void; }) => {
+  const onSubmitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
-  }
+    try {
+      const productData = {
+        name,
+        description: description.split('\n').join('<br>'),
+        category,
+        price,
+        offerPrice,
+      };
+
+      const formData = new FormData();
+      formData.append('productData', JSON.stringify(productData));
+
+      file.forEach((f) => {
+        if (f) formData.append('images', f); // ✅ match backend
+      });
+
+      // Retrieve token from localStorage or context as appropriate
+      // const token = localStorage.getItem('token');
+
+      const { data } = await axios.post('/api/product/add', formData);
+
+      if (data.success) {
+        toast.success(data.message);
+        setFile([]);
+        setName('');
+        setDescription('');
+        setCategory('');
+        setPrice(0);
+        setOfferPrice(0);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error: any) {
+      toast.error(error?.message || 'Something went wrong');
+    }
+  };
+
 
   return (
     <div className=" no-scrollbar flex-1 flex-col flex overflow-y-scroll justify-between">
@@ -32,7 +70,8 @@ const AddProduct = () => {
                     selectedFile[index] = e.target.files[0];
                     setFile(selectedFile);
                   }
-                }} type="file" id={`image${index}`} hidden />
+                }}
+                  type="file" id={`image${index}`} hidden />
 
 
                 <img src={file[index] ? URL.createObjectURL(file[index]) : assets.upload_area} alt="upload" width={100} height={100} className="max-w-24 cursor-pointer" />

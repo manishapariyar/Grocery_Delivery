@@ -10,8 +10,10 @@ const ProductDetails = () => {
   const { id } = useParams();
   const [thumbnail, setThumbnail] = useState<string | undefined>(undefined);
   const [relatedProduct, setRelatedProduct] = useState<Product[]>([]);
+  console.log(products);
 
   const product = products.find((item) => item._id === id);
+
   if (!product) {
     return (
       <div className="mt-12 text-center text-red-600">
@@ -26,10 +28,10 @@ const ProductDetails = () => {
       productsCopy = productsCopy.filter((item) => product?.category === item.category)
       setRelatedProduct(productsCopy.slice(0, 5))
     }
-  }, [products])
+  }, [products, product])
 
   useEffect(() => {
-    setThumbnail(product?.image[0] ? product.image[0] : undefined)
+    setThumbnail(product?.images?.[0] ?? undefined);
   }, [product])
 
   return (
@@ -44,7 +46,7 @@ const ProductDetails = () => {
       <div className="flex flex-col md:flex-row gap-16 mt-4">
         <div className="flex gap-3">
           <div className="flex flex-col gap-3">
-            {product.image.map((image, index) => (
+            {product.images.map((image, index) => (
               <div key={index} onClick={() => setThumbnail(image)} className="border max-w-24 border-gray-500/30 rounded overflow-hidden cursor-pointer" >
                 <img src={image} alt={`Thumbnail ${index + 1}`} />
               </div>
@@ -79,7 +81,7 @@ const ProductDetails = () => {
 
           <p className="text-base font-medium mt-6">About Product</p>
           <ul className="list-disc ml-4 text-gray-500/70">
-            {product.description.map((desc: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined, index: Key | null | undefined) => (
+            {(Array.isArray(product.description) ? product.description : [product.description]).map((desc: string, index: number) => (
               <li key={index}>{desc}</li>
             ))}
           </ul>
@@ -106,10 +108,11 @@ const ProductDetails = () => {
 
             </div>
             <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-6  lg:grid-cols-5 m-6'>
-              {relatedProduct.filter(() => product.inStock).map((product, index) => (
-                <ProductCard key={index} product={product} />
+              {relatedProduct.filter(p => p.stock).map((product) => (
+                <ProductCard key={product._id} product={product} />
               ))}
             </div>
+
             <button onClick={() => { navigate('/products'); scrollTo(0, 0) }} className="mx-auto cursor-pointer px-12 my-16 py-2.5 border rounded text-green-400 hover:bg-green-300 transition">
               See more
             </button>

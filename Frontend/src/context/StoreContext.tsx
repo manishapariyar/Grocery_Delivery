@@ -51,12 +51,22 @@ export const StoreContextProvider = ({ children }: { children: React.ReactNode }
 
   // fetch All Products
   const fetchProducts = async () => {
-    setProducts(dummyProducts);
+    try {
+      const response = await axios.get('/api/product/list');
+      if (response.data.success) {
+        setProducts(response.data.products);
+      } else {
+        toast.error(response.data.message || "Failed to fetch products");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to fetch products");
+    }
   }
   useEffect(() => {
     fetchProducts();
   }, [])
-
+  console.log(products);
 
   // add product to card
   const addToCart = (itemId: string | number) => {
@@ -114,7 +124,7 @@ export const StoreContextProvider = ({ children }: { children: React.ReactNode }
     return Math.floor(totalAmount * 100) / 100;
   }
 
-  const value = { navigate, user, setUser, setIsSeller, isSeller, showLogin, setShowLogin, products, currency, addToCart, updateCartItem, removeFromCart, cartItems, setCartItems, searchQuery, setSearchQuery, getCartAmount, getCartCount, isSellerLogin, setIsSellerLogin, axios };
+  const value = { navigate, user, setUser, setIsSeller, isSeller, showLogin, setShowLogin, products, currency, addToCart, updateCartItem, removeFromCart, cartItems, setCartItems, searchQuery, setSearchQuery, getCartAmount, getCartCount, isSellerLogin, setIsSellerLogin, axios, fetchProducts };
 
 
 

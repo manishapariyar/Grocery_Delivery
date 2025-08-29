@@ -102,9 +102,13 @@ export const sellerLogout = (req, res) => {
 // ✅ Auth check
 export const sellerIsAuthenticated = async (req, res) => {
   try {
-    const token = req.cookies.sellerToken;
-    if (!token) return res.status(401).json({ success: false, message: "Not authenticated" });
-
+    let token = req.cookies?.sellerToken;
+    if (!token && req.headers.authorization?.startsWith("Bearer ")) {
+      token = req.headers.authorization.split(" ")[1];
+    }
+    if (!token) {
+      return res.status(401).json({ success: false, message: "Not authenticated" });
+    }
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const seller = await Seller.findById(decoded.id).populate("products");
     if (!seller) return res.status(401).json({ success: false, message: "Not authenticated" });

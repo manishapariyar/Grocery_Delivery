@@ -20,7 +20,7 @@ const AllProducts = () => {
         <p className='text-2xl text-gray-500 font-bold  border-b-2 border-green-600 uppercase'>All Products</p>
         <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 md:gap-6  lg:grid-cols-5 m-6'>
           {filterProduct
-            .filter(product => product.inStock)
+            .filter(product => product.stock)
             .map((product, index) => (
               <ProductCard key={index} product={product} />
             ))}

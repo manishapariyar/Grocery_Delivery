@@ -13,11 +13,12 @@ const generateAuthToken = (id) => {
 };
 const cookieOptions = {
   httpOnly: true,
-  secure: false,
-  // secure: process.env.NODE_ENV === 'production',
+  secure: process.env.NODE_ENV === 'production', // true in production
   sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-  maxAge: 24 * 60 * 60 * 1000, // 1 day
+  maxAge: 24 * 60 * 60 * 1000,
+  path: '/',  // Ensure cookie is available on all routes
 };
+
 export const googleAuth = passport.authenticate('google', {
   scope: ['profile', 'email'],
   session: false,

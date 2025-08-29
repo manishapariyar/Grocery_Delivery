@@ -5,11 +5,12 @@ import { Link, NavLink, Outlet } from 'react-router-dom';
 import { LuPackagePlus } from 'react-icons/lu';
 import { CgPlayListCheck } from 'react-icons/cg';
 import { BsBagCheck } from 'react-icons/bs';
+import toast from 'react-hot-toast';
 
 
 const SellerLayout = () => {
 
-  const { setIsSeller, navigate } = useStoreContext();
+  const { setIsSeller, navigate, axios } = useStoreContext();
 
 
   const sidebarLinks = [
@@ -21,18 +22,19 @@ const SellerLayout = () => {
   ];
 
   const logout = async () => {
-    const response = await fetch('/api/seller/logout', {
-      method: 'get',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.ok) {
-      setIsSeller(false);
-      localStorage.removeItem('sellerInfo');
-      navigate('/seller');
-    } else {
-      console.error('Logout failed');
+    try {
+      const { data } = await axios.get('/api/auth/seller/logout');
+      if (data.success) {
+        setIsSeller(false);
+        navigate('/seller');
+        toast.success(data.message);
+      }
+      else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("Failed to logout. Please try again.");
     }
   }
 

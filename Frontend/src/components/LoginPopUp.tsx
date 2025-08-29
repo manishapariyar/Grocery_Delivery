@@ -28,7 +28,6 @@ const LoginPopUp = () => {
         }
         const response = await axios.post('/api/auth/user/signup', formData);
         console.log('Signup success:', response.data);
-        // maybe store token / set user context here
         setUser(true);
         setShowLogin(false);
       } else {
@@ -54,7 +53,7 @@ const LoginPopUp = () => {
     >
       <form
         onSubmit={onSubmitHandler}
-        onClick={(e) => e.stopPropagation()} // prevent modal close when clicking inside
+        onClick={(e) => e.stopPropagation()}
         className="bg-white w-[90%] max-w-[400px] rounded-lg p-6 relative shadow-md animate-fadeIn"
       >
         {/* Close Button */}
