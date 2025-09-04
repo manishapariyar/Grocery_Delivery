@@ -2,6 +2,7 @@ import { useState } from "react";
 import { assets, categories } from "../../assets/assets";
 import { useStoreContext } from "../../context/StoreContext";
 import toast from "react-hot-toast";
+import LoginPopUp from "../../components/LoginPopUp";
 
 
 const AddProduct = () => {
@@ -12,12 +13,16 @@ const AddProduct = () => {
   const [price, setPrice] = useState(0);
   const [offerPrice, setOfferPrice] = useState(0);
 
-  const { axios } = useStoreContext();
+  const { axios, user } = useStoreContext();
 
 
 
   const onSubmitHandler = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) {
+      toast.error("You must be logged in to add a product");
+      return;
+    }
     try {
       const productData = {
         name,
@@ -133,7 +138,12 @@ const AddProduct = () => {
               id="offer-price" type="number" placeholder="0" className="outline-none md:py-2.5 py-2 px-3 rounded border border-gray-500/40" required />
           </div>
         </div>
-        <button className="px-8 py-2.5 bg-green-500 text-white font-medium rounded">ADD</button>
+
+        <button className="px-8 py-2.5 bg-green-500 text-white font-medium rounded hover:cursor-pointer">
+          ADD
+        </button>
+
+
       </form>
     </div>
   );

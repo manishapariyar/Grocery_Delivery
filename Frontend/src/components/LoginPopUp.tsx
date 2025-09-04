@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { FaFacebookF, FaGoogle } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
 import { useStoreContext } from '../context/StoreContext';
+import toast from 'react-hot-toast';
 
 const LoginPopUp = () => {
   const { setShowLogin, axios, setUser } = useStoreContext();
@@ -28,17 +29,19 @@ const LoginPopUp = () => {
         }
         const response = await axios.post('/api/auth/user/signup', formData);
         console.log('Signup success:', response.data);
-        setUser(true);
+        setUser(response.data.user);
         setShowLogin(false);
       } else {
         const response = await axios.post('/api/auth/user/login', {
           email: formData.email,
           password: formData.password
         });
-        console.log('Login success:', response.data);
+        toast.success('Login success:');
 
         setShowLogin(false);
-        setUser(true);
+
+        setUser(response.data.user);
+
       }
     } catch (error: any) {
       console.error('Error:', error.response?.data || error.message);

@@ -1,4 +1,4 @@
-import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useStoreContext } from "../context/StoreContext"
 import { Link, useParams } from "react-router-dom";
 import { assets } from "../assets/assets";
@@ -10,7 +10,7 @@ const ProductDetails = () => {
   const { id } = useParams();
   const [thumbnail, setThumbnail] = useState<string | undefined>(undefined);
   const [relatedProduct, setRelatedProduct] = useState<Product[]>([]);
-  console.log(products);
+
 
   const product = products.find((item) => item._id === id);
 

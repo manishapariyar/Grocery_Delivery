@@ -1,25 +1,32 @@
 import User from '../models/User.js';
 
-
-//update user cart
-
 export const updateCart = async (req, res) => {
   try {
-    const { userId, cartItems } = req.body;
+    const userId = req.user?.id; // or req.body.userId if no auth middleware
+    const { cartItems } = req.body;
 
-
-    // Validate input
-    if (!userId || !Array.isArray(cartItems)) {
-      return res.status(400).json({ message: 'Invalid input data' });
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
-    const updatedCart = await User.findByIdAndUpdate(userId, { cart: cartItems });
-    if (!updatedCart) {
-      return res.status(404).json({ message: 'Cart not found' });
+    // Accept object instead of array
+    if (!cartItems || typeof cartItems !== "object") {
+      return res.status(400).json({ success: false, message: "Invalid cart data" });
     }
-    res.status(200).json({ message: 'Cart updated successfully', cart: updatedCart });
+
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { cartItems }, // directly store object
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    res.status(200).json({ success: true, message: "Cart updated successfully", cartItems: updatedUser.cartItems });
   } catch (error) {
     console.error('Error updating cart:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
-}
+};

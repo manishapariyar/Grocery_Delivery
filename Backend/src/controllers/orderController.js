@@ -1,42 +1,50 @@
 import Order from '../models/order.js';
 import Product from '../models/product.js';
-//place order COD
+
+
 export const placeOrderCOD = async (req, res) => {
   try {
-    const { userId, items, address } = req.body;
+    const { userId, items, address, paymentMethod } = req.body;
 
     // Validate input
-    if (!userId || items.length === 0 | !address || !paymentMethod) {
+    if (!userId || !items || items.length === 0 || !address || !paymentMethod) {
       return res.status(400).json({ message: 'Invalid input data' });
     }
 
-    //calcuate total amount using items
-    let totalAmount = items.reduce(async (total, item) => {
-      const product = await Product.findById(item.product);
-      return (await total) + (product.offerprice * item.quantity)
-    }, 0);
+    // Calculate total amount properly
+    let totalAmount = 0;
+    for (const item of items) {
+      // Use productId instead of product
+      const product = await Product.findById(item.productId);
 
+      if (!product) {
+        return res.status(404).json({ message: `Product ${item.productId} not found` });
+      }
+      totalAmount += Number(product.offerprice) * item.quantity;
+    }
 
-    //add tax and shipping cost
     totalAmount += Math.floor(totalAmount * 0.2);
 
-    await Order.create({
+
+    const newOrder = await Order.create({
       userId,
-      items,
+      items: items.map(item => ({
+        product: item.productId,   // 👈 schema expects `product`
+        quantity: item.quantity
+      })),
       totalAmount,
       address,
-      paymentMethod: 'Cash on Delivery',
+      paymentMethod, // should be "COD" in frontend
       isPaid: false
     });
 
-    res.status(201).json({ message: 'Order placed successfully', order: Order });
-  }
-  catch (error) {
+    res.status(201).json({ success: true, message: 'Order placed successfully', order: newOrder });
+  } catch (error) {
     console.error('Error placing order:', error);
-    res.status(500).json({ message: 'Internal server error' });
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
+};
 
-}
 
 
 //order details form individual user

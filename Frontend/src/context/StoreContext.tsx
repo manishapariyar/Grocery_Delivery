@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { dummyProducts } from "../assets/assets";
 import toast from "react-hot-toast";
 import { Product } from "../components/ProductCard";
 import axios from "axios";
@@ -9,11 +8,16 @@ import axios from "axios";
 axios.defaults.withCredentials = true; // Enable sending cookies with requests
 // Set the base URL for axios requests
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
+export interface User {
+  _id: string;
+  name: string;
+  email: string;
+}
 
 export interface StoreContextType {
   navigate: ReturnType<typeof useNavigate>;
-  user: boolean;
-  setUser: React.Dispatch<React.SetStateAction<boolean>>;
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
   isSeller: boolean;
   setIsSeller: React.Dispatch<React.SetStateAction<boolean>>;
   isSellerLogin: boolean;
@@ -39,7 +43,7 @@ export const StoreContextProvider = ({ children }: { children: React.ReactNode }
   const currency = import.meta.env.VITE_CURRENCY;
 
   const navigate = useNavigate();
-  const [user, setUser] = useState(false);
+  const [user, setUser] = useState<null | User>(null);
   const [isSeller, setIsSeller] = useState(false);
   const [products, setProducts] = useState<any[]>([]);
   const [cartItems, setCartItems] = useState<Record<Product['_id'], number>>({});
@@ -63,10 +67,6 @@ export const StoreContextProvider = ({ children }: { children: React.ReactNode }
       toast.error("Failed to fetch products");
     }
   }
-  useEffect(() => {
-    fetchProducts();
-  }, [])
-  console.log(products);
 
   // add product to card
   const addToCart = (itemId: string | number) => {
@@ -123,6 +123,47 @@ export const StoreContextProvider = ({ children }: { children: React.ReactNode }
     }
     return Math.floor(totalAmount * 100) / 100;
   }
+
+  useEffect(() => {
+    fetchProducts();
+
+  }, [])
+  //update database when cart items change
+  useEffect(() => {
+    if (!user) return; // don't update if no user
+
+    const updateCart = async () => {
+      try {
+        const { data } = await axios.post('/api/cart/update', { cartItems });
+
+        if (!data.success) {
+          toast.error(data.message || "Failed to update cart");
+        }
+      } catch (error) {
+        console.error("Cart update error:", error);
+        toast.error("Failed to update cart");
+      }
+    };
+    updateCart();
+  }, [cartItems, user]);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const { data } = await axios.get('/api/auth/user/is-auth'); // calls your backend route
+        if (data.success) {
+          setUser(data.user); // restore user state
+          setCartItems(data.user.cartItems || {});
+        }
+      } catch (err) {
+        setUser(null);
+        setCartItems({});// user not logged in
+      }
+    };
+
+    checkAuth();
+  }, []);
+
 
   const value = { navigate, user, setUser, setIsSeller, isSeller, showLogin, setShowLogin, products, currency, addToCart, updateCartItem, removeFromCart, cartItems, setCartItems, searchQuery, setSearchQuery, getCartAmount, getCartCount, isSellerLogin, setIsSellerLogin, axios, fetchProducts };
 

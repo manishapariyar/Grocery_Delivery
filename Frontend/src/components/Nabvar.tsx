@@ -8,6 +8,7 @@ import { useStoreContext } from '../context/StoreContext';
 import { LuLogOut } from 'react-icons/lu';
 import { RxCross2 } from 'react-icons/rx';
 import { BiMenu } from 'react-icons/bi';
+import toast from 'react-hot-toast';
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -18,11 +19,11 @@ const Navbar = () => {
   const logout = async () => {
     try {
       await axios.post("/api/auth/user/logout");
-      console.log("Logout successful");
+      toast.success("Logout successful");
     } catch (err) {
       console.error(err);
     } finally {
-      setUser(false);
+      setUser(null);
       navigate('/');
       setProfileOpen(false);
     }
@@ -101,19 +102,19 @@ const Navbar = () => {
       {/* Mobile Dropdown Menu */}
       {menuOpen && (
         <div className="md:hidden absolute top-full left-0 w-full bg-white pt-4 shadow-md pb-4 flex flex-col items-start gap-4 px-5 text-sm">
-          <NavLink to="/" className="hover:border-b border-gray-400 font-bold text-gray-600 w-full" onClick={() => setMenuOpen(false)}>Home</NavLink>
-          <NavLink to="/products" className="hover:border-b border-gray-400 font-bold text-gray-600 w-full" onClick={() => setMenuOpen(false)}>All Products</NavLink>
+          <NavLink to="/" className="hover:border-b border-gray-400 font-bold text-gray-600" onClick={() => setMenuOpen(false)}>Home</NavLink>
+          <NavLink to="/products" className="hover:border-b border-gray-400 font-bold text-gray-600 " onClick={() => setMenuOpen(false)}>All Products</NavLink>
 
           {!user && (
             <button
               onClick={() => { setShowLogin(true); setMenuOpen(false); }}
-              className="bg-green-300 rounded-sm px-4 py-2 flex items-center gap-1 w-full"
+              className="bg-green-300 rounded-sm px-4 py-2 flex items-center gap-1 "
             >
               <IoPersonCircleOutline className="text-xl text-green-500" /> Login
             </button>
           )}
 
-          <NavLink to="/seller/dashboard" className="bg-yellow-100 rounded-sm px-4 py-2 flex items-center gap-2 w-full" onClick={() => setMenuOpen(false)}>
+          <NavLink to="/seller/dashboard" className="bg-yellow-100 rounded-sm px-4 py-2 flex items-center gap-2" onClick={() => setMenuOpen(false)}>
             <BsShop className="text-xl text-amber-400" /> Become a Seller
           </NavLink>
         </div>

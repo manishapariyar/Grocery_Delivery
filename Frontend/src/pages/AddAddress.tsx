@@ -1,5 +1,7 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, ChangeEvent, FormEvent, useEffect } from 'react';
 import { assets } from '../assets/assets';
+import { useStoreContext } from '../context/StoreContext';
+import toast from 'react-hot-toast';
 
 // Define address state type
 interface Address {
@@ -9,7 +11,7 @@ interface Address {
   street: string;
   city: string;
   state: string;
-  zipCode: string;
+  zipcode: string;
   country: string;
   phone: string;
 }
@@ -42,6 +44,7 @@ const InputField: React.FC<InputFieldProps> = ({
 );
 
 const AddAddress: React.FC = () => {
+  const { axios, navigate, user } = useStoreContext();
   const [address, setAddress] = useState<Address>({
     firstName: '',
     lastName: '',
@@ -49,15 +52,35 @@ const AddAddress: React.FC = () => {
     street: '',
     city: '',
     state: '',
-    zipCode: '',
+    zipcode: '',
     country: '',
     phone: '',
   });
 
   const onSubmitHandler = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Submitted address:', address);
+    try {
+      const { data } = await axios.post('/api/address/add', { address });
+
+      if (data.success) {
+        toast.success("Address added successfully");
+        navigate('/cart')
+      } else {
+        toast.error(data.message || "Failed to add address");
+      }
+    } catch (err) {
+      toast.error(
+        (err as any)?.response?.data?.message ||
+        (err as Error)?.message ||
+        "Failed to add address"
+      );
+    }
   };
+  useEffect(() => {
+    if (!user) {
+      navigate('/cart');
+    }
+  })
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -129,7 +152,7 @@ const AddAddress: React.FC = () => {
               <InputField
                 handleChange={handleChange}
                 address={address}
-                name='zipCode'
+                name='zipcode'
                 type="number"
                 placeholder="Zip Code"
               />

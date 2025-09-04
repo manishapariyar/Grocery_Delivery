@@ -8,7 +8,7 @@ import jwt from 'jsonwebtoken';
 
 const generateAuthToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
-    expiresIn: '1h',
+    expiresIn: '7d',
   });
 };
 const cookieOptions = {
@@ -18,6 +18,7 @@ const cookieOptions = {
   maxAge: 24 * 60 * 60 * 1000,
   path: '/',  // Ensure cookie is available on all routes
 };
+
 
 export const googleAuth = passport.authenticate('google', {
   scope: ['profile', 'email'],
@@ -43,7 +44,6 @@ export const googleCallback = async (req, res) => {
 //register user
 export const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
-  console.log('Registering user:', { name, email });
   if (!name || !email || !password) {
     return res.status(400).json({ success: false, message: "Please provide all required fields" });
   }
@@ -76,11 +76,13 @@ export const registerUser = async (req, res) => {
       password: hashedPassword,
     });
 
-
-    const token = generateAuthToken(user._id);
-    await user.save();
+    const newUser = await user.save();
+    const token = generateAuthToken(newUser._id);
     res.cookie('token', token, cookieOptions);
-    res.status(201).json({ success: true, message: 'User registered successfully', token, });
+    res.status(201).json({ success: true, message: 'User registered successfully', user: newUser });
+
+
+
   } catch (error) {
     console.error('Registration error:', error);
     res.status(400).json({ message: 'Error registering user', error: error?.message || error });
@@ -92,7 +94,6 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
-  console.log('Logging in user:', { email });
   if (!email || !password) {
     return res.status(400).json({ success: false, message: "Please provide all required fields" });
   }
@@ -110,7 +111,8 @@ export const loginUser = async (req, res) => {
     }
     const token = generateAuthToken(user._id);
     res.cookie('token', token, cookieOptions);
-    res.status(200).json({ success: true, message: 'Login successful', token });
+    res.status(200).json({ success: true, message: 'Login successful', user });
+
   }
   catch (error) {
     res.status(400).json({
@@ -138,14 +140,12 @@ export const logoutUser = async (req, res) => {
 //user profile
 export const userProfile = async (req, res) => {
   try {
-    const userId = req.user?.id || req.body?.userId;
-
+    const userId = req.user?.id;
     if (!userId) {
       return res.status(400).json({ success: false, message: 'User ID not provided' });
     }
 
     const user = await User.findById(userId).select('-password');
-
     if (!user) {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
@@ -156,3 +156,4 @@ export const userProfile = async (req, res) => {
     res.status(500).json({ success: false, message: 'Error fetching user profile', error: error?.message || error });
   }
 };
+
