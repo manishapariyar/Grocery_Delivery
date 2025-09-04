@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { useStoreContext } from '../../context/StoreContext';
 import toast from 'react-hot-toast';
 
@@ -62,7 +62,7 @@ const ProductList = () => {
                         <input
                           type="checkbox"
                           className="sr-only peer"
-                          onClick={() => toggleStock(product._id, product.stock)}
+                          onChange={() => toggleStock(product._id, product.stock)}
                           checked={product.stock}
                         />
                         <div className="w-12 h-7 bg-slate-300 rounded-full peer peer-checked:bg-green-600 transition-colors duration-200"></div>

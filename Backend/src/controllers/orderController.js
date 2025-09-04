@@ -1,5 +1,5 @@
 import Order from '../models/order.js';
-import Product from '../models/product.js';
+import Product from '../models/Product.js';
 
 
 export const placeOrderCOD = async (req, res) => {
@@ -17,13 +17,18 @@ export const placeOrderCOD = async (req, res) => {
       // Use productId instead of product
       const product = await Product.findById(item.productId);
 
+
       if (!product) {
         return res.status(404).json({ message: `Product ${item.productId} not found` });
       }
-      totalAmount += Number(product.offerprice) * item.quantity;
-    }
+      const price = Number(product.offerPrice) || 0;
+      const qty = Number(item.quantity) || 0;
 
-    totalAmount += Math.floor(totalAmount * 0.2);
+      totalAmount += price * qty;
+    }
+    totalAmount = Math.floor(totalAmount + totalAmount * 0.2);
+
+
 
 
     const newOrder = await Order.create({
@@ -51,7 +56,7 @@ export const placeOrderCOD = async (req, res) => {
 
 export const getUserOrders = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const userId = req.user.id;
 
     // Validate input
     if (!userId) {
@@ -60,7 +65,7 @@ export const getUserOrders = async (req, res) => {
 
     const orders = await Order.find({
       userId,
-      $or: [{ paymentMethod: "COD" }, { ispaid: true }]
+      $or: [{ paymentMethod: "COD" }, { isPaid: true }]
     }).populate('items.product').populate('address').sort({ orderDate: -1 });
 
     if (orders.length === 0) {
@@ -78,7 +83,7 @@ export const getUserOrders = async (req, res) => {
 export const getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find({
-      $or: [{ paymentMethod: "COD" }, { ispaid: true }]
+      $or: [{ paymentMethod: "COD" }, { isPaid: true }]
     }).populate('items.product').populate('address').sort({ orderDate: -1 });
 
     if (orders.length === 0) {

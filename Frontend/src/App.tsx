@@ -21,7 +21,7 @@ import ProductList from "./pages/seller/ProductList";
 
 function App() {
 
-  const { showLogin, isSellerLogin, isSeller } = useStoreContext();
+  const { showLogin, isSellerLogin, isSeller, sellerChecked } = useStoreContext();
 
   const isSellerPath = useLocation().pathname.includes("seller");
 
@@ -45,7 +45,19 @@ function App() {
 
             <Route path="/seller" element={<SellerHomePage />} />
 
-            <Route path="/seller/dashboard" element={isSeller ? <SellerLayout /> : <Navigate to="/seller" />} >
+            <Route
+              path="/seller/dashboard"
+              element={
+                !sellerChecked ? (
+                  <div>Loading...</div> // optional: spinner
+                ) : isSeller ? (
+                  <SellerLayout />
+                ) : (
+                  <Navigate to="/seller" />
+                )
+              }
+            >
+
               <Route path="add-product" element={<AddProduct />} />
               <Route path="order-list" element={<Orders />} />
               <Route path="product-list" element={<ProductList />} />

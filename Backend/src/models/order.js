@@ -1,15 +1,14 @@
 import mongoose from "mongoose";
 
-
 const orderSchema = new mongoose.Schema({
   userId: {
-    type: mongoose.Schema.Types.ObjectId || string,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
   items: [{
     product: {
-      type: mongoose.Schema.Types.ObjectId || string,
+      type: mongoose.Schema.Types.ObjectId,
       ref: 'Product',
       required: true
     },
@@ -24,7 +23,7 @@ const orderSchema = new mongoose.Schema({
     required: true
   },
   address: {
-    type: mongoose.Schema.Types.ObjectId || string,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Address',
     required: true
   },
@@ -51,5 +50,7 @@ const orderSchema = new mongoose.Schema({
   timestamps: true
 });
 
-const Order = mongoose.models.order || mongoose.model('Order', orderSchema);
+// Make sure the model name matches the "ref" in other schemas
+const Order = mongoose.models.Order || mongoose.model('Order', orderSchema);
+
 export default Order;

@@ -2,8 +2,10 @@ import React, { ReactNode, useEffect, useState } from "react";
 import { useStoreContext } from "../../context/StoreContext";
 import { assets, dummyOrders } from "../../assets/assets";
 import { FiPackage } from "react-icons/fi"; // simple outline icon
+import toast from "react-hot-toast";
 
 type Order = {
+  totalAmount: number;
   createdAt: string | number | Date;
   items: { product: { name: string }; quantity: number }[];
   address: {
@@ -17,27 +19,27 @@ type Order = {
     country: string;
   };
   amount: number;
-  paymentType: string;
+  paymentMethod: string;
   orderDate: string;
   isPaid: boolean;
 };
 
 const Orders = () => {
-  const { currency } = useStoreContext();
+  const { currency, axios } = useStoreContext();
   const [orders, setOrders] = useState<Order[]>([]);
+  console.log(orders);
 
   const fetchOrders = async () => {
-    setOrders(
-      dummyOrders.map((order: any) => ({
-        createdAt: order.createdAt || order.orderDate || "",
-        items: order.items,
-        address: order.address,
-        amount: order.amount,
-        paymentType: order.paymentType,
-        orderDate: order.orderDate || order.createdAt || "",
-        isPaid: order.isPaid,
-      }))
-    );
+    try {
+      const { data } = await axios.get('/api/order/seller');
+      if (data.success) {
+        setOrders(data.orders);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to fetch orders");
+    }
   };
 
   useEffect(() => {
@@ -98,13 +100,19 @@ const Orders = () => {
               <div className="flex flex-col gap-2 sm:text-right">
                 <p className="text-lg font-semibold">
                   {currency}
-                  {order.amount.toFixed(2)}
+                  {(order.totalAmount ?? 0).toFixed(2)}
+
                 </p>
 
-                <p className="text-sm text-gray-600">
-                  <p>Method <span className="font-bold m-1">:</span> {order.paymentType}•{" "}</p>
-                  <p>Date<span className="font-bold m-1">:</span> {new Date(order.createdAt).toLocaleDateString()}</p>
-                </p>
+                <div className="text-sm text-gray-600">
+                  <p>
+                    Method <span className="font-bold m-1">:</span> {order.paymentMethod} •{" "}
+                  </p>
+                  <p>
+                    Date <span className="font-bold m-1">:</span> {new Date(order.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+
 
                 <span
                   className={`inline-block px-3 py-1 rounded-full text-xs font-medium ${paidClass}`}

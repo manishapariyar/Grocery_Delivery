@@ -8,7 +8,7 @@ const orderRouter = express.Router();
 
 
 orderRouter.post('/cod', authMiddleware, placeOrderCOD);
-orderRouter.get('/:userId', authMiddleware, getUserOrders);
+orderRouter.get('/user', authMiddleware, getUserOrders);
 orderRouter.get('/seller', SellerCredentials, getAllOrders);
 
 

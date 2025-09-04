@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useStoreContext } from '../context/StoreContext';
-import { assets, dummyAddress } from '../assets/assets';
 import { CgRemoveR } from 'react-icons/cg';
 import { BiArrowBack } from 'react-icons/bi';
 import { Product } from '../components/ProductCard';

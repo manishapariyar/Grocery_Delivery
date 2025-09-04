@@ -1,19 +1,30 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useStoreContext } from '../context/StoreContext';
 import { dummyOrders } from '../assets/assets';
 import { FaMoneyBillWave, FaShoppingBag, FaHashtag } from 'react-icons/fa';
 
 const MyOrder = () => {
   const [myOrders, setMyOrders] = useState<typeof dummyOrders>([]);
-  const { currency } = useStoreContext();
+  const { currency, axios, user } = useStoreContext();
 
   const fetchOrders = async () => {
-    setMyOrders(dummyOrders);
+    try {
+      const { data } = await axios.get('/api/order/user')
+      if (data.success) {
+        setMyOrders(data.orders)
+
+      }
+    } catch (err) {
+      console.error("Error fetching orders:", err);
+    }
   };
 
   useEffect(() => {
-    fetchOrders();
-  }, []);
+    if (user) {
+      fetchOrders();
+    }
+
+  }, [user]);
 
   return (
     <div className="flex flex-col p-6 md:p-10 gap-8 w-full min-h-screen bg-gray-50">
@@ -70,7 +81,7 @@ const MyOrder = () => {
                   {/* Product Info */}
                   <div className="flex items-center gap-3 md:col-span-4">
                     <img
-                      src={item.product.image[0]}
+                      src={item.product.images[0]}
                       alt={item.product.name}
                       className="w-16 h-16 object-cover rounded border border-green-500"
                     />

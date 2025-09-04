@@ -35,13 +35,17 @@ export interface StoreContextType {
   getCartAmount: () => number;
   searchQuery: string;
   setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+  axios: typeof axios;
+  fetchProducts: () => Promise<void>;
+  sellerChecked: boolean;
+
 }
 
 export const StoreContext = createContext<StoreContextType | null>(null);
 
 export const StoreContextProvider = ({ children }: { children: React.ReactNode }) => {
   const currency = import.meta.env.VITE_CURRENCY;
-
+  const [sellerChecked, setSellerChecked] = useState(false);
   const navigate = useNavigate();
   const [user, setUser] = useState<null | User>(null);
   const [isSeller, setIsSeller] = useState(false);
@@ -165,7 +169,26 @@ export const StoreContextProvider = ({ children }: { children: React.ReactNode }
   }, []);
 
 
-  const value = { navigate, user, setUser, setIsSeller, isSeller, showLogin, setShowLogin, products, currency, addToCart, updateCartItem, removeFromCart, cartItems, setCartItems, searchQuery, setSearchQuery, getCartAmount, getCartCount, isSellerLogin, setIsSellerLogin, axios, fetchProducts };
+
+  useEffect(() => {
+    const checkSellerAuth = async () => {
+      try {
+        const { data } = await axios.get('/api/auth/seller/is-auth');
+        if (data.success) {
+          setIsSeller(true);
+        } else {
+          setIsSeller(false);
+        }
+      } catch (err) {
+        setIsSeller(false);
+      } finally {
+        setSellerChecked(true); // mark that auth check is done
+      }
+    };
+    checkSellerAuth();
+  }, []);
+
+  const value = { navigate, user, setUser, setIsSeller, isSeller, showLogin, setShowLogin, products, currency, addToCart, updateCartItem, removeFromCart, cartItems, setCartItems, searchQuery, setSearchQuery, getCartAmount, getCartCount, isSellerLogin, setIsSellerLogin, axios, fetchProducts, sellerChecked };
 
 
 
