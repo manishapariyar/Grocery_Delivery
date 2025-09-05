@@ -3,8 +3,6 @@ import cors from 'cors';
 import cookieParser from "cookie-parser";
 import authRouter from './routes/authRouter.js';
 import session from 'express-session';
-import passport from 'passport';
-import configurePassport from './utils/oAuthConfig.js';
 import sellerRouter from './routes/sellerRouter.js';
 import productRouter from './routes/productRouter.js';
 import cartRouter from './routes/cartRouter.js';
@@ -26,7 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.static('uploads'));
 app.use(cookieParser());
-configurePassport();
+
 
 
 
@@ -38,8 +36,7 @@ app.use(session({
   saveUninitialized: true,
 
 }))
-app.use(passport.initialize());
-app.use(passport.session());
+
 
 app.get('/', (req, res) => {
   res.status(200).send({ message: "Welcome to the E-commerce API" });

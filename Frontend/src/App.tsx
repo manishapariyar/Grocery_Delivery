@@ -18,6 +18,7 @@ import SellerLayout from "./components/seller/SellerLayout";
 import AddProduct from "./pages/seller/AddProduct";
 import Orders from "./pages/seller/Orders";
 import ProductList from "./pages/seller/ProductList";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 function App() {
 
@@ -25,10 +26,18 @@ function App() {
 
   const isSellerPath = useLocation().pathname.includes("seller");
 
+  const GoogleAuthWrapper = () => {
+    return (
+      <GoogleOAuthProvider clientId={"1027012987617-6gh1hv6r0ovfj9ko60kpmuj53fkivb0n.apps.googleusercontent.com"}>
+        <LoginPopUp />
+      </GoogleOAuthProvider>
+    );
+  }
+
   return (
     <>
       <div className="text-default min-h-screen text-gray-700 bg-white ">
-        {showLogin && <LoginPopUp />}
+        {showLogin && <GoogleAuthWrapper />}
         {isSellerLogin && <SellerLoginPopUp />}
         {isSellerPath ? null : <Nabvar />}
         <Toaster />

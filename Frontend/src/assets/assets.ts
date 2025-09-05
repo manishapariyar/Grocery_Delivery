@@ -73,6 +73,7 @@ import butter_croissant_image from "./butter_croissant_image.png";
 import chocolate_cake_image from "./chocolate_cake_image.png";
 import whole_wheat_bread_image from "./whole_wheat_bread_image.png";
 import vanilla_muffins_image from "./vanilla_muffins_image.png";
+import googleLogo from "./googleLogo.png";
 
 import quinoa_image from "./quinoa_image.png";
 import brown_rice_image from "./brown_rice_image.png";
@@ -116,6 +117,7 @@ export const assets = {
   bottom_banner_image_sm,
   add_address_img,
   box_icon,
+  googleLogo
 
 };
 

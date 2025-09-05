@@ -2,7 +2,7 @@ import { useState } from "react";
 import { assets, categories } from "../../assets/assets";
 import { useStoreContext } from "../../context/StoreContext";
 import toast from "react-hot-toast";
-import LoginPopUp from "../../components/LoginPopUp";
+
 
 
 const AddProduct = () => {

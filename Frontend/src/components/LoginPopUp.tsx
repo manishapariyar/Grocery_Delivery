@@ -4,6 +4,9 @@ import { IoClose } from 'react-icons/io5';
 import { useStoreContext } from '../context/StoreContext';
 import toast from 'react-hot-toast';
 
+import { useGoogleLogin } from '@react-oauth/google';
+import { assets } from '../assets/assets';
+
 const LoginPopUp = () => {
   const { setShowLogin, axios, setUser } = useStoreContext();
   const [agreed, setAgreed] = useState(false);
@@ -48,6 +51,27 @@ const LoginPopUp = () => {
 
     }
   };
+  const resoponseGoogle = async (authResult: any) => {
+    try {
+      if (authResult['code']) {
+        const response = await axios.post('/api/auth/user/google', { code: authResult.code });
+        setUser(response.data.user);
+        setShowLogin(false);
+        toast.success('Login success:');
+      }
+
+    } catch (error) {
+      console.error(error);
+    }
+
+  }
+  const googleLogin = useGoogleLogin({
+    onSuccess: resoponseGoogle,
+    onError: resoponseGoogle,
+    flow: 'auth-code'
+  });
+
+
 
   return (
     <div
@@ -161,11 +185,8 @@ const LoginPopUp = () => {
           <hr className="flex-1 border-gray-300" />
         </div>
         <div className="flex justify-center gap-6">
-          <button type="button" className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 flex items-center gap-1">
-            <FaGoogle /> Google
-          </button>
-          <button type="button" className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 flex items-center gap-1">
-            <FaFacebookF /> Facebook
+          <button type="button" className="p-2 bg-gray-100 rounded-full hover:bg-gray-200 flex items-center gap-1" onClick={googleLogin}>
+            <img src={assets.googleLogo} alt="" width={20} />  sign up with Google
           </button>
         </div>
 

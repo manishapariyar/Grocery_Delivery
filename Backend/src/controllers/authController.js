@@ -1,9 +1,9 @@
 import User from "../models/User.js";
 import validator from "validator";
-import passport from "passport";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-
+import { oauth2Client } from "../config/googleConfig.js";
+import axios from "axios";
 
 
 const generateAuthToken = (id) => {
@@ -20,25 +20,68 @@ const cookieOptions = {
 };
 
 
-export const googleAuth = passport.authenticate('google', {
-  scope: ['profile', 'email'],
-  session: false,
-});
 
+// Step 1: Handle Google login from frontend POST
+export const googleLoginCallback = async (req, res) => {
+  try {
+    const code = req.body.code; // get code from POST body
+    if (!code) return res.status(400).json({ success: false, message: "Code not provided" });
 
+    // Exchange code for tokens
+    const { tokens } = await oauth2Client.getToken({ code, redirect_uri: 'http://localhost:5173' });
 
-export const googleCallback = async (req, res) => {
-  passport.authenticate('google', { session: false }, (err, user, info) => {
-    if (err || !user) {
-      return res.status(400).json({ message: 'Google authentication failed', error: err || info });
+    oauth2Client.setCredentials(tokens);
+
+    // Get user info
+    const { data } = await axios.get("https://www.googleapis.com/oauth2/v2/userinfo", {
+      headers: { Authorization: `Bearer ${tokens.access_token}` },
+    });
+
+    const { email, name, picture, id } = data;
+
+    // Check if user exists
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // Create new user
+      user = await User.create({
+        name,
+        email,
+        avatar: picture,
+        google: {
+          providerId: id,
+          accessToken: tokens.access_token,
+          refreshToken: tokens.refresh_token,
+        },
+      });
+    } else {
+      // Update existing user's Google info
+      user.google = {
+        providerId: id,
+        accessToken: tokens.access_token,
+        refreshToken: tokens.refresh_token || user.google?.refreshToken,
+      };
+      user.avatar = picture;
+      await user.save();
     }
-    const token = user.generateAuthToken();
 
-    res.cookie('token', token, cookieOptions);
+    const token = generateAuthToken(user._id);
+    res.cookie("token", token, cookieOptions);
 
-    return res.status(200).json({ message: 'Google authentication successful', user });
-  })(req, res);
-}
+    res.status(200).json({
+      success: true,
+      message: "Google login successful",
+      user,
+    });
+
+  } catch (error) {
+    console.error("Google login error:", error);
+    res.status(500).json({ success: false, message: "Google login failed", error: error?.message });
+  }
+};
+
+
+
 
 
 //register user
