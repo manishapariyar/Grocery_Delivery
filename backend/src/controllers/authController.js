@@ -28,7 +28,9 @@ export const googleLoginCallback = async (req, res) => {
     if (!code) return res.status(400).json({ success: false, message: "Code not provided" });
 
     // Exchange code for tokens
-    const { tokens } = await oauth2Client.getToken({ code, redirect_uri: 'http://localhost:5173' });
+    const { tokens } = await oauth2Client.getToken({
+      code, redirect_uri: 'https://grosha-mart.vercel.app'
+    });
 
     oauth2Client.setCredentials(tokens);
 
