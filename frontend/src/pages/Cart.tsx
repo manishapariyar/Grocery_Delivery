@@ -116,8 +116,8 @@ const Cart = () => {
 
         const pid = order._id;
         const scd = 'EPAYTEST'; // sandbox merchant code
-        const su = `http://localhost:5173/esewa/success`;
-        const fu = `http://localhost:5173/esewa/fail`;
+        const su = `https://grosha-mart.vercel.app/esewa/success`;
+        const fu = `https://grosha-mart.vercel.app/esewa/fail`;
 
         // Correct Esewa redirect URL (sandbox)
         const esewaURL = `https://rc-epay.esewa.com.np/epay/main?amt=${amt}&psc=${psc}&pdc=${pdc}&txAmt=${txAmt}&tAmt=${tAmt}&pid=${pid}&scd=${scd}&su=${su}&fu=${fu}`;
