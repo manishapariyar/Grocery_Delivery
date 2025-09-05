@@ -4,7 +4,7 @@ import { useStoreContext } from "../context/StoreContext";
 type CategoryType = {
   text: string;
   path: string;
-  image: string;
+  images: string;
   bgColor: string;
 };
 
@@ -50,7 +50,7 @@ const CategoryMenu: React.FC<Props> = ({
 
             >
               <img
-                src={item.image}
+                src={item.images}
                 alt={item.text}
                 className="w-18 h-18 rounded-full object-cover"
               />
