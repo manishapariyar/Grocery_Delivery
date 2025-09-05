@@ -32,4 +32,6 @@ const SellerCredentials = async (req, res, next) => {
   }
 };
 
+
+
 export default SellerCredentials;
