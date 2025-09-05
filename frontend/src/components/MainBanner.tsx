@@ -33,7 +33,7 @@ const MainBanner = () => {
           {imageSlider.map((item, index) => (
             <div key={index} className="flex justify-center items-center">
               <img
-                src={item.image}
+                src={item.images}
                 alt={`Slide ${index + 1}`}
                 className="sm:w-full  w-[120px]h-[180px] sm:h-[240px] md:h-[300px] lg:h-[360px] object-cover rounded-lg shadow-md transition-transform duration-700 transform scale-100 hover:scale-95"
               />
