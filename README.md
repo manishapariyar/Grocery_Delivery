@@ -74,7 +74,7 @@ Now open your browser and go to:
  ### Individual Item
  ![Item](./screenshots/individual_iteam.png) 
 
- ### Individual_Order
+ ### Individual Order
  ![Order](./screenshots/individual_Order.png) 
 
  ### Seller Home Page
