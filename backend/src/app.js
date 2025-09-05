@@ -50,7 +50,7 @@ app.use("/api/order", orderRouter);
 app.use(express.static(path.join(__dirname, "build")));
 
 // Catch-all route for React Router
-app.get("*", (req, res) => {
+app.get(/^\/(?!api).*/, (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
 

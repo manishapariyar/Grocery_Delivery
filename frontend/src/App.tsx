@@ -70,7 +70,9 @@ function App() {
               <Route path="add-product" element={<AddProduct />} />
               <Route path="order-list" element={<Orders />} />
               <Route path="product-list" element={<ProductList />} />
+
             </Route>
+            <Route path="*" element={<div>Page not found</div>} />
 
           </Routes>
         </div>
