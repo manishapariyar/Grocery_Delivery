@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-import Seller from "../models/Seller.js";
+import Seller from "../models/Seller.js"
 
 const SellerCredentials = async (req, res, next) => {
   try {
