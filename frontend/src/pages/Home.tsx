@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import MainBanner from '../components/MainBanner'
 import CategoryMenu from '../components/CategoryMenu'
 import { categories } from '../assets/assets';

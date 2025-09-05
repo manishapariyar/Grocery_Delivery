@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { useStoreContext } from '../context/StoreContext'
 import { useParams } from 'react-router-dom';
 import { categories } from '../assets/assets';

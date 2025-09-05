@@ -1,7 +1,6 @@
-import React, { ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useStoreContext } from "../../context/StoreContext";
-import { assets, dummyOrders } from "../../assets/assets";
-import { FiPackage } from "react-icons/fi"; // simple outline icon
+import { assets } from "../../assets/assets";
 import toast from "react-hot-toast";
 
 type Order = {

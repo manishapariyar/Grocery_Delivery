@@ -1,4 +1,4 @@
-import React from 'react'
+
 import { assets } from '../assets/assets';
 import { useStoreContext } from '../context/StoreContext';
 
@@ -22,7 +22,7 @@ type ProductCardProps = {
 };
 
 const ProductCard = ({ product }: ProductCardProps) => {
-  const { currency, addToCart, updateCartItem, removeFromCart, cartItems, navigate } = useStoreContext();
+  const { currency, addToCart, removeFromCart, cartItems, navigate } = useStoreContext();
 
   return product && (
     <div

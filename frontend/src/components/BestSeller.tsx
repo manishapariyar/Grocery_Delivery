@@ -1,4 +1,4 @@
-import React from 'react'
+
 import ProductCard, { Product } from './ProductCard'
 import { useStoreContext } from '../context/StoreContext'
 
