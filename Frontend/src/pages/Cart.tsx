@@ -5,7 +5,6 @@ import { BiArrowBack } from 'react-icons/bi';
 import { Product } from '../components/ProductCard';
 import toast from 'react-hot-toast';
 
-
 const Cart = () => {
   const {
     products,
@@ -20,6 +19,7 @@ const Cart = () => {
     setCartItems,
     user,
   } = useStoreContext();
+
   type Address = {
     street: string;
     city: string;
@@ -32,11 +32,11 @@ const Cart = () => {
   const [cartArray, setCartArray] = useState<Product[]>([]);
   const [showAddress, setShowAddress] = useState(false);
   const [addresses, setAddresses] = useState<Address[]>([]);
+  const [paymentOption, setPaymentOption] = useState<'COD' | 'esewa'>('COD');
 
-  const [paymentOption, setPaymentOption] = useState('COD');
-
+  // Load cart products from cartItems
   const getCart = () => {
-    let tempArr: Product[] = [];
+    const tempArr: Product[] = [];
     for (const key in cartItems) {
       const product = products.find((item) => item._id === key);
       if (product) {
@@ -46,6 +46,7 @@ const Cart = () => {
     setCartArray(tempArr);
   };
 
+  // Fetch user addresses
   const getUserAddresses = async () => {
     try {
       const response = await axios.get('/api/address/get-address');
@@ -55,63 +56,85 @@ const Cart = () => {
           setSelectAddress(response.data.addresses[0]);
         }
       } else {
-        toast.error(response.data.message || "Failed to fetch addresses");
+        toast.error(response.data.message || 'Failed to fetch addresses');
       }
     } catch (error) {
       toast.error(
         (error as any)?.response?.data?.message ||
         (error as Error)?.message ||
-        "Failed to fetch addresses"
+        'Failed to fetch addresses'
       );
-    }
-  }
-
-  useEffect(() => {
-    if (user) {
-      getUserAddresses();
-    }
-  }, [user])
-
-  const placeOrder = async () => {
-    // Implement order logic here
-    try {
-      if (!selectAddress) {
-        toast.error("Please select a delivery address");
-        return;
-      }
-      if (cartArray.length === 0) {
-        toast.error("Your cart is empty");
-        return;
-      }
-      if (paymentOption === 'COD') {
-        const { data } = await axios.post('/api/order/cod', {
-          userId: user?._id,
-          address: selectAddress,
-          paymentMethod: 'COD',
-          items: cartArray.map(item => ({
-            productId: item._id,
-            quantity: item.quantity
-          }))
-
-        });
-        if (data.success) {
-          toast.success("Order placed successfully");
-          setCartItems({});
-          navigate('/orders');
-        } else {
-          toast.error(data.message || "Failed to place order");
-        }
-      }
-    } catch (error) {
-      toast.error((error as any)?.response?.data?.message || (error as Error)?.message || "Failed to place order");
-
     }
   };
 
   useEffect(() => {
-    if (products.length > 0 && cartItems) {
-      getCart();
+    if (user) getUserAddresses();
+  }, [user]);
+
+  // Place order handler
+  const placeOrder = async () => {
+    try {
+      if (!selectAddress) {
+        toast.error('Please select a delivery address');
+        return;
+      }
+      if (cartArray.length === 0) {
+        toast.error('Your cart is empty');
+        return;
+      }
+
+      const method = paymentOption; // 'COD' or 'esewa'
+
+      const { data } = await axios.post('/api/order/order-place', {
+        userId: user?._id,
+        address: selectAddress,
+        paymentMethod: method,
+        items: cartArray.map((item) => ({
+          productId: item._id,
+          quantity: item.quantity,
+        })),
+      });
+
+      if (!data.success) {
+        toast.error(data.message || 'Failed to place order');
+        return;
+      }
+
+      if (method === 'COD') {
+        toast.success('Order placed successfully');
+        setCartItems({});
+        navigate('/orders');
+      } else if (method === 'esewa') {
+        const { order } = data;
+
+        // Backend already included 20% tax in totalAmount
+        const amt = order.totalAmount; // product + tax
+        const txAmt = 0; // already included in backend
+        const psc = 0;
+        const pdc = 0;
+        const tAmt = amt + txAmt + psc + pdc;
+
+        const pid = order._id;
+        const scd = 'EPAYTEST'; // sandbox merchant code
+        const su = `http://localhost:5173/esewa/success`;
+        const fu = `http://localhost:5173/esewa/fail`;
+
+        // Correct Esewa redirect URL (sandbox)
+        const esewaURL = `https://rc-epay.esewa.com.np/epay/main?amt=${amt}&psc=${psc}&pdc=${pdc}&txAmt=${txAmt}&tAmt=${tAmt}&pid=${pid}&scd=${scd}&su=${su}&fu=${fu}`;
+
+        window.location.href = esewaURL;
+      }
+    } catch (error) {
+      toast.error(
+        (error as any)?.response?.data?.message ||
+        (error as Error)?.message ||
+        'Failed to place order'
+      );
     }
+  };
+
+  useEffect(() => {
+    if (products.length > 0 && cartItems) getCart();
   }, [products, cartItems]);
 
   return products.length > 0 && cartItems ? (
@@ -158,7 +181,9 @@ const Cart = () => {
                     <select
                       className="outline-none ml-1"
                       value={product.quantity}
-                      onChange={(e) => updateCartItem(product._id, parseInt(e.target.value))}
+                      onChange={(e) =>
+                        updateCartItem(product._id, parseInt(e.target.value))
+                      }
                     >
                       {Array.from(
                         { length: Math.max(10, product.quantity || 1) },
@@ -243,11 +268,12 @@ const Cart = () => {
           <p className="text-sm font-medium uppercase mt-6">Payment Method</p>
 
           <select
-            onChange={(e) => setPaymentOption(e.target.value)}
+            value={paymentOption}
+            onChange={(e) => setPaymentOption(e.target.value as 'COD' | 'esewa')}
             className="w-full border border-gray-300 bg-white px-3 py-2 mt-2 outline-none"
           >
             <option value="COD">Cash On Delivery</option>
-            <option value="Online">Online Payment</option>
+            <option value="esewa">Online Payment via Esewa</option>
           </select>
         </div>
 
@@ -266,17 +292,17 @@ const Cart = () => {
             <span className="text-green-600">Free</span>
           </p>
           <p className="flex justify-between">
-            <span>Tax (2%)</span>
+            <span>Tax (20%)</span>
             <span>
               {currency}
-              {(getCartAmount() * 0.02).toFixed(2)}
+              {(getCartAmount() * 0.2).toFixed(2)}
             </span>
           </p>
           <p className="flex justify-between text-lg font-medium mt-3">
             <span>Total Amount:</span>
             <span>
               {currency}
-              {(getCartAmount() * 1.02).toFixed(2)}
+              {(getCartAmount() * 1.2).toFixed(2)}
             </span>
           </p>
         </div>

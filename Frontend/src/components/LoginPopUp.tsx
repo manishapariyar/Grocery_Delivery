@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { FaFacebookF, FaGoogle } from 'react-icons/fa';
 import { IoClose } from 'react-icons/io5';
 import { useStoreContext } from '../context/StoreContext';
 import toast from 'react-hot-toast';
