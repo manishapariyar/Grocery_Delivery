@@ -29,7 +29,8 @@ export const googleLoginCallback = async (req, res) => {
 
     // Exchange code for tokens
     const { tokens } = await oauth2Client.getToken({
-      code, redirect_uri: 'https://grosha-mart.vercel.app'
+      code,
+      redirect_uri: 'https://grocery-backend.onrender.com/api/auth/user/google/callback'
     });
 
     oauth2Client.setCredentials(tokens);
