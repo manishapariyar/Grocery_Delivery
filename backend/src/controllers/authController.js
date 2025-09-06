@@ -76,8 +76,6 @@ export const googleLoginCallback = async (req, res) => {
       message: "Google login successful",
       user,
     });
-    // Redirect to frontend
-    res.redirect("https://grosha-mart.vercel.app");
 
   } catch (error) {
     console.error("Google login error:", error);
