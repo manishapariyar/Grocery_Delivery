@@ -30,7 +30,7 @@ export const googleLoginCallback = async (req, res) => {
     // Exchange code for tokens
     const { tokens } = await oauth2Client.getToken({
       code,
-      redirect_uri: 'https://grocery-backend.onrender.com/api/auth/user/google/callback'
+      redirect_uri: process.env.GOOGLE_REDIRECT_URI
     });
 
     oauth2Client.setCredentials(tokens);
