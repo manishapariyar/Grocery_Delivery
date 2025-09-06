@@ -30,7 +30,7 @@ export const googleLoginCallback = async (req, res) => {
     // Exchange code for tokens
     const { tokens } = await oauth2Client.getToken({
       code,
-      redirect_uri: process.env.GOOGLE_REDIRECT_URI
+      redirect_uri: 'https://grosha-mart.vercel.app/'
     });
 
     oauth2Client.setCredentials(tokens);
