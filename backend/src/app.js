@@ -2,8 +2,6 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import session from "express-session";
-import path from "path";
-import { fileURLToPath } from "url";
 
 import authRouter from "./routes/authRouter.js";
 import sellerRouter from "./routes/sellerRouter.js";
@@ -14,9 +12,6 @@ import orderRouter from "./routes/orderRouter.js";
 
 const app = express();
 
-// __dirname fix for ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Middleware
 app.use(
@@ -46,12 +41,10 @@ app.use("/api/cart", cartRouter);
 app.use("/api/address", addressRouter);
 app.use("/api/order", orderRouter);
 
-// Serve React build folder
-app.use(express.static(path.join(__dirname, "build")));
 
 // Catch-all route for React Router
-app.get(/^\/(?!api).*/, (req, res) => {
-  res.sendFile(path.join(__dirname, "build", "index.html"));
+app.get('/', (req, res) => {
+  res.send("welcome to Grosha Backend")
 });
 
 export default app;
