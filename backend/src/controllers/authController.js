@@ -42,15 +42,25 @@ export const googleLoginCallback = async (req, res) => {
 
     const { email, name, picture, id } = data;
 
+    let uploadAvatar = null;
+    try {
+      const uploadResult = await cloudinary.uploader.upload(picture, {
+        folder: "avatars",
+      })
+    } catch (error) {
+      console.error("Cloudinary upload error:", error);
+    }
+
+    uploadAvatar = uploadResult?.secure_url || picture;
     // Check if user exists
     let user = await User.findOne({ email });
-
+    console.log(user)
     if (!user) {
       // Create new user
       user = await User.create({
         name,
         email,
-        avatar: picture,
+        avatar: uploadAvatar,
         google: {
           providerId: id,
           accessToken: tokens.access_token,
