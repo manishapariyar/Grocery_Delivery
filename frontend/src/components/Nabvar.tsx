@@ -66,13 +66,14 @@ const Navbar = () => {
         </div>
 
         {/* Profile Icon */}
+
         {user && (
           <div className='relative'>
             <img
-              src={assets.profile_icon}
-              alt=""
+              src={user.avatar || assets.profile_icon}  // ✅ use Google image if available
+              alt="profile"
               width={40}
-              className="cursor-pointer"
+              className="cursor-pointer rounded-full object-cover"
               onClick={() => setProfileOpen(!profileOpen)}
             />
             {profileOpen && (
@@ -156,7 +157,12 @@ const Navbar = () => {
             </button>
           ) : (
             <div className='relative group'>
-              <img src={assets.profile_icon} alt="" width={40} />
+              <img
+                src={user.avatar || assets.profile_icon}  // ✅ use Google image if available
+                alt="profile"
+                width={40}
+                className="rounded-full object-cover"
+              />
               <ul className='hidden group-hover:block absolute top-10 right-0 bg-white shadow border border-gray-200 py-2.5 w-40 rounded-md text-sm z-40'>
                 <li className='p-1 pl-4 hover:bg-gray-300 cursor-pointer'>
                   <NavLink to="/orders">My Orders</NavLink>
@@ -168,6 +174,7 @@ const Navbar = () => {
                 </li>
               </ul>
             </div>
+
           )}
 
           {/* Cart */}

@@ -9,6 +9,7 @@ axios.defaults.withCredentials = true; // Enable sending cookies with requests
 // Set the base URL for axios requests
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 export interface User {
+  avatar: string;
   _id: string;
   name: string;
   email: string;
