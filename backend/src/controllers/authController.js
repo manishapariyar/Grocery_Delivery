@@ -43,8 +43,9 @@ export const googleLoginCallback = async (req, res) => {
     const { email, name, picture, id } = data;
 
     let uploadAvatar = null;
+    let uploadResult = null;
     try {
-      const uploadResult = await cloudinary.uploader.upload(picture, {
+      uploadResult = await cloudinary.uploader.upload(picture, {
         folder: "avatars",
       })
     } catch (error) {
