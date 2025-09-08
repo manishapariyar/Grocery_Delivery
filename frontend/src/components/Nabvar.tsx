@@ -28,6 +28,7 @@ const Navbar = () => {
       setProfileOpen(false);
     }
   };
+  console.log(user)
 
   useEffect(() => {
     if (searchQuery.length > 0) {
